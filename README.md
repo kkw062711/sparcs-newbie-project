@@ -1,1 +1,7 @@
-# sparcs-newbie-project
+# sparcs-newbie-project : 카이스트 공동구매 사이트
+기능 
+- 로그인
+- 공동구매 물건 검색
+- 공동구매 카테고리별 필터
+- 구매 후기
+- 정산/미정산 상태 확인
