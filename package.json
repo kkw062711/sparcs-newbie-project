@@ -1,23 +1,23 @@
 {
-  "name": "prisma-express-react-example-setup",
+  "name": "sparcs-newbie-project-setup",
   "version": "1.0.0",
-  "description": "Example Prisma + Express + React Repository",
+  "description": "Prisma + Express + React Repository",
   "main": "index.js",
   "scripts": {
 	  "dev": "concurrently --kill-others-on-fail --default-input-target 2 --handle-input  --names \"SPARCS,Client-Dev,Server-Dev\" --prefix \"[{name}][{time}]\" --timestamp-format \"HH:mm:ss\" --prefix-colors \"yellow.bold,blue.bold,green.bold\" \"yarn dev:introduce\" \"cd client && yarn dev\" \"cd server && yarn dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:introduce": "echo \"[ Welcome to SPARCS NEWBIE Project Dev Server by Night ]\n\n\""
+    "dev:introduce": "echo \"[ Welcome to SPARCS NEWBIE Project Dev Server ]\n\n\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UrWrstNightmare/prisma-express-react-example-setup.git"
+    "url": "git+https://github.com/kkw062711/sparcs-newbie-project.git"
   },
-  "author": "Jiho Park",
+  "author": "rjsdn",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/UrWrstNightmare/prisma-express-react-example-setup/issues"
+    "url": "https://github.com/kkw062711/sparcs-newbie-project/issues"
   },
-  "homepage": "https://github.com/UrWrstNightmare/prisma-express-react-example-setup#readme",
+  "homepage": "https://github.com/kkw062711/sparcs-newbie-project#readme",
   "devDependencies": {
     "concurrently": "^8.0.1"
   },
