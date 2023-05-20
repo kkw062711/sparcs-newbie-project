@@ -11,7 +11,7 @@
     "prisma:pull-dev": "dotenv -e .env.development prisma db pull",
     "prisma:pull-prod": "dotenv -e .env.production prisma db pull"
   },
-  "type": "module",
+  "type": "commonjs",
   "author": "rjsdn",
   "license": "ISC",
   "devDependencies": {

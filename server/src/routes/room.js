@@ -8,20 +8,20 @@
 - 방 삭제 OK
 */
 const express = require('express');
-const FeedModel = require('../models/feed');
+const RoomModel = require('../models/room.js');
 
 const router = express.Router();
 
-class FeedDB {
+class RoomDB {
     static _inst_;
     static getInst = () => {
-        if (!FeedDB._inst_) FeedDB._inst_ = new FeedDB();
-        return FeedDB._inst_;
+        if (!RoomDB._inst_) RoomDB._inst_ = new RoomDB();
+        return RoomDB._inst_;
     }
 
     // #id = 1; #itemCount = 1; #LDataDB = [{ id: 0, title: "test1", content: "Example body" }];
 
-    constructor() { console.log("[Feed-DB] DB Init Completed"); }
+    constructor() { console.log("[Room-DB] DB Init Completed"); }
 
     selectRooms = async (item) => {
         try {
@@ -31,33 +31,33 @@ class FeedDB {
             var res = []
             switch (type) {
                 case 'default':
-                    res = await FeedModel.find().sort({ 'createdAt': -1 }).exec();
+                    res = await RoomModel.find().sort({ 'createdAt': -1 }).exec();
                     break;
                 case 'filter':
-                    res = await FeedModel.find({ category: value }).exec();
+                    res = await RoomModel.find({ category: value }).exec();
                     break;
                 case 'search':
-                    res = await FeedModel.find({ $text: { $search: value } });
+                    res = await RoomModel.find({ $text: { $search: value } });
                     break;
                 case 'sort':
                     switch (value) {
                         case 'dateu':
-                            res = await FeedModel.find().sort({ 'createdAt': -1 });
+                            res = await RoomModel.find().sort({ 'createdAt': -1 });
                             break;
                         case 'dated':
-                            res = await FeedModel.find().sort({ 'createdAt': 1 });
+                            res = await RoomModel.find().sort({ 'createdAt': 1 });
                             break;
                         case 'nameu':
-                            res = await FeedModel.find().sort({ 'name': -1 });
+                            res = await RoomModel.find().sort({ 'name': -1 });
                             break;
                         case 'named':
-                            res = await FeedModel.find().sort({ 'name': 1 });
+                            res = await RoomModel.find().sort({ 'name': 1 });
                             break;
                         case 'priceu':
-                            res = await FeedModel.find().sort({ 'price': -1 });
+                            res = await RoomModel.find().sort({ 'price': -1 });
                             break;
                         case 'priced':
-                            res = await FeedModel.find().sort({ 'price': 1 });
+                            res = await RoomModel.find().sort({ 'price': 1 });
                             break;
                         default:
                             break;
@@ -68,7 +68,7 @@ class FeedDB {
             }
             return { success: true, data: res };
         } catch (e) {
-            console.log(`[Feed-DB] Room Select Error: ${e}`);
+            console.log(`[Room-DB] Room Select Error: ${e}`);
             return { success: false, data: `DB Error - ${e}` };
         }
     }
@@ -76,7 +76,7 @@ class FeedDB {
     insertRoom = async (item) => {
         const { name, creator, image, description, category, price } = item;
         try {
-            const newItem = new FeedModel({
+            const newItem = new RoomModel({
                 name: name,
                 creator: creator,
                 image: image,
@@ -85,10 +85,10 @@ class FeedDB {
                 price: price
             });
             const res = await newItem.save();
-            FeedModel.updateOne({ id: newItem._id }, { $push: { members: creator } })
+            RoomModel.updateOne({ id: newItem._id }, { $push: { members: creator } })
             return true;
         } catch (e) {
-            console.log(`[Feed-DB] Room Insert Error: ${e}`);
+            console.log(`[Room-DB] Room Insert Error: ${e}`);
             return false;
         }
     }
@@ -96,10 +96,10 @@ class FeedDB {
     deleteRoom = async (id) => {
         try {
             const ODeleteFiler = { _id: id };
-            const res = await FeedModel.deleteOne(ODeleteFiler);
+            const res = await RoomModel.deleteOne(ODeleteFiler);
             return true;
         } catch (e) {
-            console.log(`[Feed-DB] Room Delete Error: ${e}`);
+            console.log(`[Room-DB] Room Delete Error: ${e}`);
             return false;
         }
     }
@@ -107,7 +107,7 @@ class FeedDB {
     updateRoomInfo = async (item) => {
         const { id, name, image, description, category, price } = item;
         try {
-            const res = await FeedModel.updateOne(
+            const res = await RoomModel.updateOne(
                 { id: id },
                 {
                     $set: {
@@ -121,7 +121,7 @@ class FeedDB {
             )
             return true;
         } catch (e) {
-            console.log(`[Feed-DB] Room Info Update Error: ${e}`);
+            console.log(`[Room-DB] Room Info Update Error: ${e}`);
             return false;
         }
     }
@@ -129,25 +129,25 @@ class FeedDB {
         const { id, members, ifadd } = item;
         try {
             if (ifadd) {
-                const res = await FeedModel.updateOne(
+                const res = await RoomModel.updateOne(
                     { id: id }, { $push: { mebers: members } }
                 )
             }
             else {
-                const res = await FeedModel.updateOne(
+                const res = await RoomModel.updateOne(
                     { id: id }, { $pull: { mebers: members } }
                 )
             }
             return true;
         } catch (e) {
-            console.log(`[Feed-DB] Room Member Update Error: ${e}`);
+            console.log(`[Room-DB] Room Member Update Error: ${e}`);
             return false;
         }
     }
     updateRoomState = async (item) => {
         const { id, ispurchased, isclosed, iscompleted, isrecieved } = item;
         try {
-            const res = await FeedModel.updateOne(
+            const res = await RoomModel.updateOne(
                 { id: id },
                 {
                     $set: {
@@ -160,18 +160,18 @@ class FeedDB {
             )
             return true;
         } catch (e) {
-            console.log(`[Feed-DB] Room State Update Error: ${e}`);
+            console.log(`[Room-DB] Room State Update Error: ${e}`);
             return false;
         }
     }
 }
 
-const feedDBInst = FeedDB.getInst();
+const RoomDBInst = RoomDB.getInst();
 
 router.get('/getRoom', async (req, res) => {
     try {
         // const {type, value} = req.body;
-        const dbRes = await feedDBInst.selectRooms(req.body);
+        const dbRes = await RoomDBInst.selectRooms(req.body);
         if (dbRes.success) return res.status(200).json(dbRes.data);
         else return res.status(500).json({ error: dbRes.data })
     } catch (e) {
@@ -182,7 +182,7 @@ router.get('/getRoom', async (req, res) => {
 router.post('/addRoom', async (req, res) => {
     try {
         // const { name, creator, image, description, category, price } = req.body;
-        const addResult = await feedDBInst.insertItem(req.body);
+        const addResult = await RoomDBInst.insertItem(req.body);
         if (!addResult) return res.status(500).json({ error: dbRes.data })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
@@ -193,7 +193,7 @@ router.post('/addRoom', async (req, res) => {
 router.post('/deleteRoom', async (req, res) => {
     try {
         const { id } = req.body;
-        const deleteResult = await feedDBInst.deleteItem(id);
+        const deleteResult = await RoomDBInst.deleteItem(id);
         if (!deleteResult) return res.status(500).json({ error: "Can't Delete Room" })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
@@ -204,7 +204,7 @@ router.post('/deleteRoom', async (req, res) => {
 router.post('/updateRoomInfo', async (req, res) => {
     try {
         // const { id, name, image, description, category, price, ispurchased, isclosed, iscompleted, isrecieved, members } = req.body;
-        const updateResult = await feedDBInst.updateRoomInfo(req.body);
+        const updateResult = await RoomDBInst.updateRoomInfo(req.body);
         if (!updateResult) return res.status(500).json({ error: dbRes.data })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
@@ -215,7 +215,7 @@ router.post('/updateRoomInfo', async (req, res) => {
 router.post('/updateRoomMember', async (req, res) => {
     try {
         // const { id, members, ifadd } = req.body;
-        const updateResult = await feedDBInst.updateRoomMember(req.body);
+        const updateResult = await RoomDBInst.updateRoomMember(req.body);
         if (!updateResult) return res.status(500).json({ error: dbRes.data })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
@@ -226,12 +226,11 @@ router.post('/updateRoomMember', async (req, res) => {
 router.post('/updateRoomState', async (req, res) => {
     try {
         // const { id, ispurchased, isclosed, iscompleted, isrecieved } = item;
-        const updateResult = await feedDBInst.updateRoomMember(req.body);
+        const updateResult = await RoomDBInst.updateRoomMember(req.body);
         if (!updateResult) return res.status(500).json({ error: dbRes.data })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
         return res.status(500).json({ error: e });
     }
 });
-
 module.exports = router;

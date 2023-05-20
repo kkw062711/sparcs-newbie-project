@@ -1,13 +1,22 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from 'cors';
-import path from 'path';
-import mongoose from 'mongoose';
+// package.json 의 type이 module인 경우 import문을, commonjs인 경우 require문을 사용
+// import userRouter from './routes/user.js';
+// import roomRouter from './routes/room.js';
+// import express from "express";
+// import dotenv from "dotenv";
+// import cors from 'cors';
+// import path from 'path';
+// import mongoose from 'mongoose';
 
-// 라우터 정의
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const path = require('path');
+const mongoose = require('mongoose')
 
-import roomRouter from './routes/room';
-import userRouter from './routes/user';
+// 라우터 정의 
+
+const roomRouter = require('./routes/room')
+const userRouter = require('./routes/user')
 
 /* DO NOT REMOVE */
 /* Configure Environment Variables */

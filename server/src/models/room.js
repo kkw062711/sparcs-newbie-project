@@ -6,7 +6,7 @@ const OSchemaDefinition = {
     image : String, // 공구할 제품의 사진 링크
     description : String, // 공구할 제품 설명
     category : String, // 공구할 제품의 카테고리
-    price : Int, // 공구 제품 가격
+    price : Number, // 공구 제품 가격
     ispurchased : {
         type : Boolean,
         default : false
