@@ -1,0 +1,23 @@
+.header {
+    /* border: solid 2px black; */
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+.name {
+    font-size: 50px;
+    margin: 0px;
+    padding: 0px;
+}
+.page {
+    font-size: 25px;
+    position: relative;
+    top:12px;
+    left:25px;
+    color:dimgray;
+}
+.auth {
+    position: relative;
+    margin-left: auto;
+    margin-right: 5px
+}
