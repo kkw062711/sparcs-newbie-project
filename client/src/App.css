@@ -1,5 +1,8 @@
 #root {
-    padding: 2px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow: hidden;
 }
 /* 
 .logo {

@@ -7,6 +7,7 @@ import ProfilePage from "./pages/profile";
 import RegisterPage from './pages/register';
 import RoomPage from "./pages/room";
 import RoomcontrolPage from "./pages/roomcontrol";
+import RoomcreatePage from "./pages/roomcreatae"
 import ErrorPage from "./pages/error"
 import Header from './components/header';
 import './App.css';
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/room" element={<RoomPage />} />
           <Route path="/roomcontrol" element={<RoomcontrolPage />} />
+          <Route path="/roomcreate" element={<RoomcreatePage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>

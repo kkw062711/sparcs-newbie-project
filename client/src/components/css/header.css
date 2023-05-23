@@ -3,19 +3,25 @@
     display: flex;
     align-items: center;
     padding-left: 10px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
 }
+
 .name {
     font-size: 50px;
     margin: 0px;
     padding: 0px;
 }
+
 .page {
     font-size: 25px;
     position: relative;
-    top:12px;
-    left:25px;
-    color:dimgray;
+    top: 12px;
+    left: 25px;
+    color: dimgray;
 }
+
 .auth {
     position: relative;
     margin-left: auto;

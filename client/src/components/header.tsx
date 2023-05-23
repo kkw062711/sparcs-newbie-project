@@ -12,15 +12,12 @@ const Header = () => {
     const page = useSelector((state: RootState) => state.page);
     const auth = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
-    const changePage = (page) => {
-      dispatch({ type: 'changepage', page: page })
-    }
     const changeAuth = (auth) => {
       dispatch({ type: 'changeauth',auth : auth })
     }
     return (
         <div className="header">
-            <h3 className="name" onClick={(e) => { navigate("/"); changePage("Home"); changeAuth(false) }}>Group Shopping in Kaist</h3>
+            <h3 className="name" onClick={(e) => { navigate("/"); changeAuth(false) }}>Group Shopping in Kaist</h3>
             <div className="page">-{page}</div>
             <div className="auth">{auth ? <ProfileButton /> : <LoginButton />}</div>
         </div>
