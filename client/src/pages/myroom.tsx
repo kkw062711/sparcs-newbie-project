@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useInterval } from "../tools/interval";
-import "./css/myroom.css";
 import { SAPIBase } from "../tools/api";
 import store from "../components/store";
 // MUI import
