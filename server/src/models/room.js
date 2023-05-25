@@ -7,6 +7,7 @@ const OSchemaDefinition = {
     description : String, // 공구할 제품 설명
     category : String, // 공구할 제품의 카테고리
     price : Number, // 공구 제품 가격
+    due : String, // 공구 듀
     ispurchased : {
         type : Boolean,
         default : false

@@ -18,7 +18,7 @@ class RoomDB {
         if (!RoomDB._inst_) RoomDB._inst_ = new RoomDB();
         return RoomDB._inst_;
     }
-    
+
     constructor() { console.log("[Room-DB] DB Init Completed"); }
 
     selectRooms = async (item) => {
@@ -72,7 +72,7 @@ class RoomDB {
     }
 
     insertRoom = async (item) => {
-        const { name, creator, image, description, category, price } = item;
+        const { name, creator, image, description, category, price, due } = item;
         try {
             const newItem = new RoomModel({
                 name: name,
@@ -80,7 +80,8 @@ class RoomDB {
                 image: image,
                 description: description,
                 category: category,
-                price: price
+                price: price,
+                due: due
             });
             const res = await newItem.save();
             RoomModel.updateOne({ id: newItem._id }, { $push: { members: creator } })
@@ -103,7 +104,7 @@ class RoomDB {
     }
 
     updateRoomInfo = async (item) => {
-        const { id, name, image, description, category, price } = item;
+        const { id, name, image, description, category, price, due } = item;
         try {
             const res = await RoomModel.updateOne(
                 { id: id },
@@ -113,7 +114,8 @@ class RoomDB {
                         image: image,
                         description: description,
                         category: category,
-                        price: price
+                        price: price,
+                        due: due
                     }
                 }
             )
@@ -179,7 +181,7 @@ router.get('/getRoom', async (req, res) => {
 
 router.post('/addRoom', async (req, res) => {
     try {
-        // const { name, creator, image, description, category, price } = req.body;
+        // const { name, creator, image, description, category, price, due } = req.body;
         const addResult = await RoomDBInst.insertItem(req.body);
         if (!addResult) return res.status(500).json({ error: dbRes.data })
         else return res.status(200).json({ isOK: true });

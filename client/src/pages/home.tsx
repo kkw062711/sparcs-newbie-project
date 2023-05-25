@@ -27,19 +27,20 @@ const HomePage = (props) => {
   const navigate = useNavigate();
 
   return (
-    <Box className="container">
-
+    <Box //메인 컨테이너 
+    sx={{
+      display:'flex',flexDirection:'column', width:'auto',
+      }}>
       <Divider variant="middle"
         sx={{ margin: "10px 0px 10px 0px" }} />
 
       {/* 방 검색, 정렬, 필터 */}
       <Box // 방 헤더
         sx={{
-          display: 'flex', flexDirection: 'row',
-          flexWrap: 'nowrap', alignItems: 'center',
-          padding: '0px 10px 0px 10px', justifyContent: 'center'
+          display: 'flex', flexDirection: 'row', alignItems: 'center',
+          padding: '0px 10px 0px 10px', justifyContent: 'center', minWidth:'auto'
         }}>
-
+          
         {/* 방 검색 */}
         <Box // 방 검색 칸
           sx={{
@@ -60,7 +61,7 @@ const HomePage = (props) => {
             sx={{ width: '400px', margin: '0px 0px 0px 15px' }} />
         </Box>
         <Divider orientation="vertical" flexItem
-          sx={{ margin: "3px 20px 0px 20px" }} />
+          sx={{ margin: "3px 8px 0px 8px" }} />
 
         {/* 방 정렬 */}
         <Box // 방 정렬 칸
@@ -87,25 +88,25 @@ const HomePage = (props) => {
               label="정렬 옵션" onChange={(e) => { setOrderby(e.target.value) }}>
               <MenuItem value="date" >
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   날짜순
                 </Typography>
               </MenuItem>
               <MenuItem value="name">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   가나다순
                 </Typography>
               </MenuItem>
               <MenuItem value="price">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   가격순
                 </Typography>
               </MenuItem>
               <MenuItem value="price">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   참여자순
                 </Typography>
               </MenuItem>
@@ -135,7 +136,7 @@ const HomePage = (props) => {
         </Box>
 
         <Divider orientation="vertical" flexItem
-          sx={{ margin: "3px 20px 0px 20px" }} />
+          sx={{ margin: "3px 8px 0px 8px" }} />
 
         {/* 카테고리 필터 */}
         <Box // 카테고리 필터 칸
@@ -162,49 +163,49 @@ const HomePage = (props) => {
               label="정렬 옵션" onChange={(e) => { setFilter(e.target.value) }}>
               <MenuItem value="all" >
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   전체
                 </Typography>
               </MenuItem>
               <MenuItem value="food">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   음식
                 </Typography>
               </MenuItem>
               <MenuItem value="necessity">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   생필품
                 </Typography>
               </MenuItem>
               <MenuItem value="device">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   전자기기
                 </Typography>
               </MenuItem>
               <MenuItem value="fashion">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   패션
                 </Typography>
               </MenuItem>
               <MenuItem value="cosmetic">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   화장품
                 </Typography>
               </MenuItem>
               <MenuItem value="stationery">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   완구/문구
                 </Typography>
               </MenuItem>
               <MenuItem value="etc">
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', }}>
+                  sx={{ fontSize: '20px', fontWeight: 'bold', }}>
                   기타
                 </Typography>
               </MenuItem>
@@ -213,7 +214,7 @@ const HomePage = (props) => {
         </Box>
 
         <Divider orientation="vertical" flexItem
-          sx={{ margin: "3px 20px 0px 20px" }} />
+          sx={{ margin: "3px 8px 0px 8px" }} />
 
         {/* 방 생성 */}
         <Box // 방 생성 칸
