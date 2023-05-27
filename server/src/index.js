@@ -16,7 +16,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
-const mongoose = require('mongoose')
 
 // 라우터 정의 
 
@@ -55,16 +54,8 @@ app.use('/user', userRouter);
 
 app.use('/static', express.static(path.join(__dirname,'public')));
 
-
-const OMongooseOption = { useNewUrlParser: true, useUnifiedTopology: true };
-mongoose.connect("mongodb://mongodb:adminrjsdn@ssal.sparcs.org:57925/GSiK", OMongooseOption).then(
-    () => { console.log("[Mongoose] Connection Complete!") },
-    (err) => { console.log(`[Mongoose] Connection Error: ${ err }`) }
-);
-
-
 app.get("/", (req, res) => {
-	res.send("Hello, World!");
+	res.send("On-Line");
 });
 
 
