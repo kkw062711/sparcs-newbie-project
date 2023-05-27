@@ -5,7 +5,7 @@ const room = new PrismaClient().room;
 const router = express.Router();
 
 
-router.get('/getRoom', async (req, res) => {
+router.post('/getRoom', async (req, res) => {
     try {
         const { type, value } = req.body;
         // type 는 default, filter, search, sort 중 하나의 값을 갖고
@@ -14,7 +14,7 @@ router.get('/getRoom', async (req, res) => {
         const getRoom = await room.findMany({
             orderBy: { createdAt: 'desc' }
         })
-        if (getRoom) return res.status(200).json({isOk : true});
+        if (getRoom) return res.status(200).json(getRoom);
         else return res.status(500).json({ error: getRoom })
     } catch (e) {
         return res.status(500).json({ error: e });

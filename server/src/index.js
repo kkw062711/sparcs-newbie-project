@@ -1,41 +1,21 @@
-// package.json 의 type이 module인 경우 import문을, commonjs인 경우 require문을 사용
-
-
-// import express from "express";
-// import dotenv from "dotenv";
-// import cors from 'cors';
-// import path from 'path';
-// import mongoose from 'mongoose';
-
-// // 라우터 정의
-// import {userRouter} from './routes/user.js';
-// import {roomRouter} from './routes/room.js';
-
-
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
-
-// 라우터 정의 
+const dotenv = require('dotenv')//.config();
 
 const roomRouter = require('./routes/room')
 const userRouter = require('./routes/user')
+const port = process.env.EXPRESS_PORT;
+const app = express();
+app.use(express.json());
 
-/* DO NOT REMOVE */
-/* Configure Environment Variables */
 if (process.env.ENVIRONMENT === "DEVELOPMENT") {
 	dotenv.config({ path: ".env.development" })
 } else {
 	dotenv.config({ path: ".env.production" })
 }
 
-
-const app = express();
-const port = process.env.EXPRESS_PORT;
-
-app.use(express.json)
-
+const whitelist = ['http://localhost:5173'];
 const corsOptions = {
     origin: (origin, callback) => {
         console.log('[REQUEST-CORS] Request from origin: ', origin);
@@ -45,21 +25,16 @@ const corsOptions = {
     credentials: true,
 } 
 
-app.use(cors(corsOptions))
 
-//라우터 사용
+app.use(cors(corsOptions));
 
 app.use('/room', roomRouter);
 app.use('/user', userRouter);
 
 app.use('/static', express.static(path.join(__dirname,'public')));
 
-app.get("/", (req, res) => {
-	res.send("On-Line");
-});
 
 
 app.listen(port, () => {
-	console.log(`Express Listening @ http://localhost:${ port }`);
+   console.log(`Example App Listening @ http://localhost:${ port }`);
 });
-
