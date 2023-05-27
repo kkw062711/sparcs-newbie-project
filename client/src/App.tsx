@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
-import MyroomPage from "./pages/myroom";
 import ProfilePage from "./pages/profile";
 import RegisterPage from './pages/register';
 import RoomPage from "./pages/room";
@@ -19,7 +18,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/myroom" element={<MyroomPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/room" element={<RoomPage />} />
