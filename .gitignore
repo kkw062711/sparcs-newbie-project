@@ -1,7 +1,5 @@
 .vscode
 .idea
-.env*
-!.env*.example
 node_modules
 server_port.txt
 
