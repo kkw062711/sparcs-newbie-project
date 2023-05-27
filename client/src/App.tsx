@@ -6,8 +6,7 @@ import MyroomPage from "./pages/myroom";
 import ProfilePage from "./pages/profile";
 import RegisterPage from './pages/register';
 import RoomPage from "./pages/room";
-import RoomcontrolPage from "./pages/roomcontrol";
-import RoomcreatePage from "./pages/roomcreatae"
+import RoomchangePage from "./pages/roomchange"
 import ErrorPage from "./pages/error"
 import Header from './components/header';
 import './App.css';
@@ -24,8 +23,7 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/room" element={<RoomPage />} />
-          <Route path="/roomcontrol" element={<RoomcontrolPage />} />
-          <Route path="/roomcreate" element={<RoomcreatePage />} />
+          <Route path="/roomcreate" element={<RoomchangePage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>

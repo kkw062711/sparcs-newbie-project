@@ -7,7 +7,6 @@ import store from "../components/store";
 import { Box, Typography, Button, TextField, Divider } from "@mui/material";
 // MUI import
 
-
 const RoomcreatePage = (props: {}) => {
   useEffect(() => {
     console.log('');
@@ -35,7 +34,7 @@ const RoomcreatePage = (props: {}) => {
             fontSize: "25px", fontWeight: 'bold',
             margin: '30px 0px 20px 0px'
           }}  >
-            개인 정보
+            필수 정보
           </Typography>
 
           <Divider orientation="vertical" flexItem
@@ -47,7 +46,7 @@ const RoomcreatePage = (props: {}) => {
               fontSize: "20px", fontWeight: 'bold',
               margin: '20px 14px 0px 14px'
             }}>
-              방 이름 -
+              방 이름 (공구 물품) -
             </Typography>
 
             <TextField // 이름 입력칸
@@ -98,60 +97,66 @@ const RoomcreatePage = (props: {}) => {
           </Typography>
 
           <Divider orientation="vertical" flexItem
-            sx={{ margin: "3px 8px 0px 8px" }} />
-
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{
-              fontSize: "20px", fontWeight: 'bold',
-              margin: '20px 14px 0px 14px'
-            }}>
-              사진 -
-            </Typography>
-            <Button variant="outlined" onClick={(e) => { }}
-              sx={{
-                margin: '15px 10px 0px 0px'
-              }}>
-              <Typography
-                sx={{ fontSize: '20px', fontWeight: 'bold', alignSelf: 'center' }}>
-                사진 업로드
+            sx={{ margin: "3px 20px 0px 8px" }} />
+          <Box sx={{display:'flex', flexDirection:'column'}}>
+            <Box sx={{ display: 'flex', margin:'-5px 0px 0px 20px' }}>
+              <Typography sx={{
+                fontSize: "20px", fontWeight: 'bold',
+                margin: '0px 14px 0px 14px'
+                }}>
+                사진 -
               </Typography>
-            </Button>
+              <Button variant="outlined" onClick={(e) => { }}
+                sx={{
+                  margin: '-3px 10px 5px 0px'
+                }}>
+                <Typography
+                  sx={{ fontSize: '15px', fontWeight: 'bold', 
+                  alignSelf: 'center' }}>
+                  사진 업로드
+                </Typography>
+              </Button>
+            </Box>
+            <Box sx={{
+              width: '250px', height: '250px',
+              border: '2px solid', borderRadius: '20px', padding: "20px",
+              borderColor: 'primary.dark', margin: '0px 0px 20px 0px'
+            }} />
           </Box>
-
           <Divider orientation="vertical" flexItem
-            sx={{ margin: "3px 8px 0px 8px" }} />
+            sx={{ margin: "3px 20px 0px 20px" }} />
 
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{
-              fontSize: "20px", fontWeight: 'bold',
-              margin: '20px 30px 0px 10px'
-            }}>
-              설명 -
+          <Box sx={{ display: 'flex', flexDirection:'column' }}>
+          <Typography
+              sx={{ fontWeight: 'bold', fontSize:'20px', 
+              margin: '0px 0px 0px 5px' }}>
+              설명 - 
             </Typography>
-            <TextField // 계좌 입력칸
-              label={""}
-              variant="standard" multiline
-              sx={{ width: '300px', margin: '15px 15px 0px 15px' }}
-              onChange={(e) => { }} />
+            <TextField
+              multiline
+              rows={8}
+              disabled
+              variant="filled"
+              sx={{ margin: '0px 0px 20px 0px', width:'400px' }}/>
           </Box>
 
 
         </Box>
-        <Box // 선택 정보
+        <Box // 방 만들기/ 생성하기
           sx={{
             display: 'flex', alignItems: 'center', justifyItems: 'center',
             margin: '20px 0px 10px 0px'
           }}>
-        <Button variant="outlined" onClick={(e) => { }}
-          sx={{
-            margin: '15px 10px 0px 0px', justifySelf: 'flex-end'
-          }}>
-          <Typography
-            sx={{ color:'primary.dark', fontSize: '25px', fontWeight: 'bold' }}>
-            방 만들기
-          </Typography>
-        </Button>
-          
+          <Button variant="outlined" onClick={(e) => { }}
+            sx={{
+              margin: '15px 10px 0px 0px', justifySelf: 'flex-end'
+            }}>
+            <Typography
+              sx={{ color: 'primary.dark', fontSize: '25px', fontWeight: 'bold' }}>
+              방 만들기
+            </Typography>
+          </Button>
+
         </Box>
       </Box>
     </Box>
