@@ -15,7 +15,7 @@ if (process.env.ENVIRONMENT === "DEVELOPMENT") {
 	dotenv.config({ path: ".env.production" })
 }
 
-const whitelist = ['http://localhost:5173'];
+const whitelist = ['http://localhost:5173', 'http://ssal.sparcs.org:15031'];
 const corsOptions = {
     origin: (origin, callback) => {
         console.log('[REQUEST-CORS] Request from origin: ', origin);
