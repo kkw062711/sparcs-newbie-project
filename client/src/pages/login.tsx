@@ -14,21 +14,20 @@ const LoginPage = (props: {}) => {
     console.log('');
     store.dispatch({ type: 'changepage', page: 'Login' })
   }, []);
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const isLogin = (email, password) => {
     const asyncFun = async () => {
       const Loginsuccess = await axios.post(SAPIBase + '/user/Login', {
-        email:email, password:password
+        email: email, password: password
       });
-      console.log(email, password, Loginsuccess.data.Loginsuccess)
-      if(Loginsuccess.data.Loginsuccess){
+      if (Loginsuccess.data.Loginsuccess) {
         navigate('/');
-        store.dispatch({ type: 'changeauth', auth: true })
+        store.dispatch({ type: 'changeauth', auth: Loginsuccess.data.Loginsuccess })
       }
-      else{
+      else {
         window.alert("이메일과 비밀번호를 확인해주세요!")
       }
     }
@@ -51,8 +50,8 @@ const LoginPage = (props: {}) => {
           borderRadius: '20px',
           margin: '0 auto',
           marginTop: '50px',
-          width: '400px',
-          height: '500px',
+          width: '26vw',
+          height: '65vh',
           // boxShadow: 3
         }}>
 
@@ -111,7 +110,7 @@ const LoginPage = (props: {}) => {
               margin: '50px 0px 0px 0px'
             }}>
             <Button variant="contained" size="large"
-              type="submit" onClick={(e) => {isLogin(email, password)}}>
+              type="submit" onClick={(e) => { isLogin(email, password) }}>
               <Typography fontSize={"22px"}>
                 로그인
               </Typography>

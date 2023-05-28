@@ -5,7 +5,7 @@ const dotenv = require('dotenv')//.config();
 
 const roomRouter = require('./routes/room')
 const userRouter = require('./routes/user')
-const port = process.env.EXPRESS_PORT;
+const port = 8080//process.env.EXPRESS_PORT;
 const app = express();
 app.use(express.json());
 

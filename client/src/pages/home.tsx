@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../components/reducer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { style } from "./css/home";
@@ -6,14 +8,13 @@ import { SAPIBase } from "../tools/api";
 import { Button, Typography } from "@mui/material";
 import { TextField, InputLabel, MenuItem, Select, Radio, RadioGroup, FormControlLabel, Divider, Box } from '@mui/material/';
 import store from "../components/store";
+import RoomInfo from "../components/roominfo";
 
 // MUI import
 
 const HomePage = (props) => {
-
   // useeffect
   useEffect(() => {
-    console.log('');
     store.dispatch({ type: 'changepage', page: 'Home' })
   }, []);
 
@@ -28,8 +29,8 @@ const HomePage = (props) => {
 
   return (
     <Box //메인 컨테이너 
-    sx={{
-      display:'flex',flexDirection:'column', width:'auto',
+      sx={{
+        display: 'flex', flexDirection: 'column', width: 'auto',
       }}>
       <Divider variant="middle"
         sx={{ margin: "10px 0px 10px 0px" }} />
@@ -37,10 +38,10 @@ const HomePage = (props) => {
       {/* 방 검색, 정렬, 필터 */}
       <Box // 방 헤더
         sx={{
-          display: 'flex', flexDirection: 'row', alignItems: 'center',
-          padding: '0px 10px 0px 10px', justifyContent: 'center', minWidth:'auto'
+          display: 'flex', flexDirection: 'row', alignItems: 'center', minWidth:'auto',
+          padding: '0px 10px 0px 10px', justifyContent: 'center', width:'100vw', alignSelf:'center'
         }}>
-          
+
         {/* 방 검색 */}
         <Box // 방 검색 칸
           sx={{
@@ -58,7 +59,7 @@ const HomePage = (props) => {
           <TextField // 방 검색 입력칸
             label="방 검색하기"
             variant="standard" onChange={(e) => { setSearch(e.target.value) }}
-            sx={{ width: '400px', margin: '0px 0px 0px 15px' }} />
+            sx={{ width: '25vw', margin: '0px 0px 0px 15px' }} />
         </Box>
         <Divider orientation="vertical" flexItem
           sx={{ margin: "3px 8px 0px 8px" }} />
@@ -84,7 +85,7 @@ const HomePage = (props) => {
               정렬 종류
             </InputLabel>
             <Select // 정렬 옵션 선택 드롭다운
-            value={orderby} variant="standard"
+              value={orderby} variant="standard"
               label="정렬 옵션" onChange={(e) => { setOrderby(e.target.value) }}>
               <MenuItem value="date" >
                 <Typography
@@ -115,7 +116,7 @@ const HomePage = (props) => {
 
 
           <Box // 방 정렬 순서
-          sx={{ margin: "0px 5px 0px 5px" }}>
+            sx={{ margin: "0px 5px 0px 5px" }}>
 
             <InputLabel // 정렬 순서 라벨
               sx={{
@@ -125,7 +126,7 @@ const HomePage = (props) => {
               정렬 순서
             </InputLabel>
             <RadioGroup // 정렬 순서 입력 라디오 버튼
-            row value={orderrule} onChange={(e) => { setOrderrule((e.target as HTMLInputElement).value) }}
+              row value={orderrule} onChange={(e) => { setOrderrule((e.target as HTMLInputElement).value) }}
               sx={{ margin: 0 }}>
               <FormControlLabel value="u" control={<Radio />} label="오름차순"
                 sx={{ fontSize: '15px', fontWeight: 'bold' }} />
@@ -159,7 +160,7 @@ const HomePage = (props) => {
               카테고리 종류
             </InputLabel>
             <Select // 카테고리 종류 입력 드롭다운
-            value={filter} variant='standard'
+              value={filter} variant='standard'
               label="정렬 옵션" onChange={(e) => { setFilter(e.target.value) }}>
               <MenuItem value="all" >
                 <Typography
@@ -218,9 +219,9 @@ const HomePage = (props) => {
 
         {/* 방 생성 */}
         <Box // 방 생성 칸
-        sx={{
-          display: 'flex', alignItems: 'center', justifyItems: 'center'
-        }}>
+          sx={{
+            display: 'flex', alignItems: 'center', justifyItems: 'center'
+          }}>
           <Typography // 방 만들기 라벨
             sx={{
               fontSize: '20px', fontWeight: 'bold',
@@ -245,6 +246,14 @@ const HomePage = (props) => {
       </Box>
       <Divider variant="middle"
         sx={{ margin: "17px 0px 3px 0px" }} />
+
+      {/* /****************************************** */}
+      <RoomInfo/>
+      <RoomInfo/>
+      <RoomInfo/>
+      {/* ******************************** */}
+
+
     </Box>
   )
 };

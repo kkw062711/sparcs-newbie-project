@@ -52,7 +52,7 @@ const RoomcreatePage = (props: {}) => {
             <TextField // 이름 입력칸
               label={""}
               variant="standard"
-              sx={{ width: '300px', margin: '15px 15px 0px 15px' }}
+              sx={{ width: '16vw', margin: '15px 15px 0px 15px' }}
               onChange={(e) => { }}
             />
           </Box>
@@ -72,7 +72,7 @@ const RoomcreatePage = (props: {}) => {
             <TextField // 가격 입력칸
               label={""}
               variant="standard"
-              sx={{ width: '100px', margin: '15px 15px 0px 15px' }}
+              sx={{ width: '6vw', margin: '15px 15px 0px 15px' }}
               onChange={(e) => { }} />
             <Typography sx={{
               fontSize: "20px", fontWeight: 'bold',
@@ -98,12 +98,12 @@ const RoomcreatePage = (props: {}) => {
 
           <Divider orientation="vertical" flexItem
             sx={{ margin: "3px 20px 0px 8px" }} />
-          <Box sx={{display:'flex', flexDirection:'column'}}>
-            <Box sx={{ display: 'flex', margin:'-5px 0px 0px 20px' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', margin: '-5px 0px 0px 20px' }}>
               <Typography sx={{
                 fontSize: "20px", fontWeight: 'bold',
                 margin: '0px 14px 0px 14px'
-                }}>
+              }}>
                 사진 -
               </Typography>
               <Button variant="outlined" onClick={(e) => { }}
@@ -111,14 +111,16 @@ const RoomcreatePage = (props: {}) => {
                   margin: '-3px 10px 5px 0px'
                 }}>
                 <Typography
-                  sx={{ fontSize: '15px', fontWeight: 'bold', 
-                  alignSelf: 'center' }}>
+                  sx={{
+                    fontSize: '15px', fontWeight: 'bold',
+                    alignSelf: 'center'
+                  }}>
                   사진 업로드
                 </Typography>
               </Button>
             </Box>
             <Box sx={{
-              width: '250px', height: '250px',
+              width: '15vw', height: '15vw',
               border: '2px solid', borderRadius: '20px', padding: "20px",
               borderColor: 'primary.dark', margin: '0px 0px 20px 0px'
             }} />
@@ -126,23 +128,25 @@ const RoomcreatePage = (props: {}) => {
           <Divider orientation="vertical" flexItem
             sx={{ margin: "3px 20px 0px 20px" }} />
 
-          <Box sx={{ display: 'flex', flexDirection:'column' }}>
-          <Typography
-              sx={{ fontWeight: 'bold', fontSize:'20px', 
-              margin: '0px 0px 0px 5px' }}>
-              설명 - 
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography
+              sx={{
+                fontWeight: 'bold', fontSize: '20px',
+                margin: '0px 0px 0px 5px'
+              }}>
+              설명 -
             </Typography>
             <TextField
               multiline
-              rows={8}
-              disabled
+              rows={7}
               variant="filled"
-              sx={{ margin: '0px 0px 20px 0px', width:'400px' }}/>
+              sx={{ margin: '0px 0px 20px 0px', width: '400px' }} />
+
           </Box>
 
 
         </Box>
-        <Box // 방 만들기/ 생성하기
+        <Box // 방 만들기/ 수정하기
           sx={{
             display: 'flex', alignItems: 'center', justifyItems: 'center',
             margin: '20px 0px 10px 0px'

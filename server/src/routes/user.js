@@ -1,14 +1,27 @@
 const { PrismaClient } = require("@prisma/client")
 
 const express = require('express');
-const client = new PrismaClient();
+const client = new PrismaClient().user;
 const router = express.Router();
 const nodemailer = require('nodemailer')
+
+router.post('/getUser', async (req, res) => {
+    try {
+        const { id } = req.body;
+        const getUser = await client.findUnique({
+            where: { id: parseInt(id) }
+        })
+        if (!getUser) return res.status(200).json(getUser)
+        else { return res.status(200).json(getUser); }
+    } catch (e) {
+        return res.status(500).json({ error: e });
+    }
+});
 
 router.post('/addUser', async (req, res) => {
     try {
         const { email, password, name, phone, bank, account } = req.body;
-        const addResult = await client.user.create({
+        const addUser = await client.create({
             data: {
                 email: email,
                 password: password,
@@ -18,8 +31,8 @@ router.post('/addUser', async (req, res) => {
                 account: account
             }
         })
-        if (!addResult) return res.status(500).json({ error: addResult })
-        else {return res.status(200).json({ isOK: true });}
+        if (!addUser) return res.status(500).json({ error: addUser })
+        else { return res.status(200).json({ isOK: true }); }
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -29,18 +42,18 @@ router.post('/Login', async (req, res) => {
     try {
         const { email, password } = req.body;
         var Loginsuccess = false;
-        const Login = await client.user.findUnique({
+        const Login = await client.findUnique({
             where: {
                 email: email
             }
         })
-        if(Login){
-            if(Login.password==password){
-                Loginsuccess=true
+        if (Login) {
+            if (Login.password == password) {
+                Loginsuccess = Login.id
             }
         }
 
-        return res.status(200).json({Loginsuccess : Loginsuccess })
+        return res.status(200).json({ Loginsuccess: Loginsuccess })
         // if (getRoom) return res.status(200).json(getRoom);
         // else return res.status(500).json({ error: getRoom })
     } catch (e) {
@@ -51,12 +64,13 @@ router.post('/Login', async (req, res) => {
 router.post('/deleteUser', async (req, res) => {
     try {
         const { id } = req.body;
-        const deleteResult = await client.user.delete({
+        const deleteUser = await client.delete({
             where: {
-                id: id
+                id: parseInt(id),
             }
         })
-        if (!deleteResult) return res.status(500).json({ error: "Can't Delete User" })
+        console.log(deleteUser)
+        if (!deleteUser) return res.status(500).json({ error: "Can't Delete User" })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
         return res.status(500).json({ error: e });
@@ -65,10 +79,10 @@ router.post('/deleteUser', async (req, res) => {
 
 router.post('/updateUserInfo', async (req, res) => {
     try {
-        const { id, password, name, phone, bank, account, roomjoined } = req.body;
-        const updateResult = await client.user.update({
+        const { id, password, name, phone, bank, account } = req.body;
+        const updateUserInfo = await client.update({
             where: {
-                id: id
+                id: parseInt(id)
             },
             data: {
                 password: password,
@@ -78,8 +92,7 @@ router.post('/updateUserInfo', async (req, res) => {
                 account: account,
             }
         })
-        if (!updateResult) return res.status(500).json({ error: updateResult })
-        else return res.status(200).json({ isOK: true });
+        return res.status(200).json({ isOK: true });
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -88,13 +101,13 @@ router.post('/updateUserInfo', async (req, res) => {
 router.post('/updateUserRoom', async (req, res) => {
     try {
         const { id, roomjoined, ifadd } = req.body;
-        const userroom = await client.user.findUnique({
-            where: { id: id },
+        const userroom = await client.findUnique({
+            where: { id: parseInt(id) },
             select: { roomjoined: true }
         })
         const updateUserRoom = null
         if (ifadd) {
-            updateUserRoom = await client.user.update({
+            updateUserRoom = await client.update({
                 where: { id: id },
                 data: {
                     roomjoined: {
@@ -104,8 +117,8 @@ router.post('/updateUserRoom', async (req, res) => {
             })
         }
         else {
-            updateUserRoom = await client.user.update({
-                where: { id: id },
+            updateUserRoom = await client.update({
+                where: { id: parseInt(id) },
                 data: {
                     roomjoined: {
                         set: roomjoined.filter((i) => i !== id)

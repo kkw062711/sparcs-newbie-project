@@ -6,11 +6,6 @@ import { Provider } from 'react-redux'
 import store from './components/store'
 import { ThemeProvider } from '@emotion/react'
 import { Box, CssBaseline, createTheme } from '@mui/material'
-const Container = () => {
-  return (
-    <Box/>
-  );
-}
 
 export default App;
 const theme = createTheme({
@@ -67,6 +62,8 @@ const theme = createTheme({
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+
 root.render(
   <React.StrictMode>
       <ThemeProvider theme={theme}>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useInterval } from "../tools/interval";
 import { SAPIBase } from "../tools/api";
 import store from "../components/store";
-import { Box, Typography, Button, TextField, Divider, FormControlLabel, Switch } from "@mui/material";
+import { Box, Typography, Button, TextField, Divider, Paper, Switch, List, Select } from "@mui/material";
 // MUI import
 
 
@@ -136,22 +136,78 @@ const RoomPage = (props: {}) => {
           padding: '0px 0px 0px 10px', flexDirection: 'row', overflow: 'hidden'
         }}>
           <Box sx={{
-            width: '200px', height: '200px',
+            width: '13vw', height: '13vw',
             border: '2px solid', borderRadius: '20px', padding: "20px",
             borderColor: 'primary.dark', margin: '30px 0px 20px 0px'
           }} />
+
+          <Divider orientation="vertical" flexItem
+            sx={{ margin: "3px 7px 0px 20px" }} />
+
           <Box>
             <Typography
-              sx={{ fontWeight: 'bold', fontSize:'20px', margin: '0px 0px 0px 20px' }}>
-              설명
+              sx={{ fontWeight: 'bold', fontSize: '25px', margin: '0px 0px 0px 20px' }}>
+              설명 -
             </Typography>
             <TextField
               multiline
               rows={5}
               disabled
               variant="filled"
-              sx={{ margin: '0px 0px 0px 20px', width:'930px' }}/>
+              sx={{ margin: '0px 0px 0px 20px', width: '30vw' }} />
           </Box>
+
+          <Divider orientation="vertical" flexItem
+            sx={{ margin: "3px 7px 0px 20px" }} />
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              <Typography
+                sx={{
+                  fontWeight: 'bold', fontSize: '25px', margin: '50px 10px 0px 20px',
+                  justifySelf: 'flex-start'
+                }}>
+                멤버 - n명
+              </Typography>
+
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+
+                <Paper style={{ maxHeight: '20vh', width:'25vw' ,overflow: 'auto' }}>
+                  <List>
+                    ...
+                  </List>
+                  <List>
+                    ...
+                  </List>
+                  <List>
+                    ...
+                  </List>
+
+                </Paper>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', margin:'30px 0px 0px 0px'}}>
+              <Typography
+                sx={{
+                  fontWeight: 'bold', fontSize: '25px', margin: '0px 10px 0px 20px',
+                  justifySelf: 'flex-start'
+                }}>
+                가격 - n원
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontWeight: 'bold', fontSize: '25px', margin: '0px 10px 0px 20px',
+                  justifySelf: 'flex-start'
+                }}>
+                기한
+
+              </Typography>
+
+            </Box>
+
+          </Box>
+
         </Box>
       </Box>
 

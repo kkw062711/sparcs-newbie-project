@@ -1,30 +1,80 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../components/reducer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useInterval } from "../tools/interval";
 import { SAPIBase } from "../tools/api";
 import store from "../components/store";
-import { Box, TextField, Typography, Button, Divider } from "@mui/material";
+import { Box, TextField, Typography, Button, Divider, OutlinedInput, Switch } from "@mui/material";
+import SimpleRoomInfo1 from "../components/simpleroominfo1";
+import SimpleRoomInfo2 from "../components/simpleroominfo2";
 // MUI import
 
+
 const ProfilePage = (props: {}) => {
+  const userId = useSelector((state: RootState) => state.auth)
   useEffect(() => {
-    console.log('');
+    getProfile()
     store.dispatch({ type: 'changepage', page: 'Profile' })
   }, []);
-  const navigate = useNavigate();
-  const email = "example000@XXXXXX.com"
 
-  const [isdisabled, setIsdisabled] = useState([true, true, true, true])
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [cpassword, setCpassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [bank, setBank] = useState('');
   const [account, setAccount] = useState('');
+  const [pwstate, setPwstate] = useState(false);
 
+  const getProfile = () => {
+    const asyncFun = async () => {
+      const getProfile = await axios.post(SAPIBase + '/user/getUser', { id: userId });
+      if (getProfile.data) {
+        const { email, password, name, phone, bank, account } = getProfile.data;
+        setEmail(email)
+        setPassword(password)
+        setName(name)
+        setPhone(phone)
+        setBank(bank)
+        setAccount(account)
+      }
+      else {
+        navigate('/')
+      }
+    }
+    asyncFun().catch(e => { window.alert(`Login Error! ${e}`) });
+  }
 
-  const changedisable = (n) => {
-    isdisabled[n] = !isdisabled[n]
-    setIsdisabled([...isdisabled]);
+  const changeProfile = () => {
+    if (cpassword !== password) {
+      window.alert(`새 비밀번호가 일치하지 않습니다!`)
+      return
+    }
+    const asyncFun = async () => {
+      console.log(userId, password, name, phone, bank, account)
+      const updateProfile = await axios.post(SAPIBase + '/user/updateUserInfo',
+        {
+          id: userId, password: password, name: name,
+          phone: phone, bank: bank, account: account
+        });
+    }
+    asyncFun().catch(e => { window.alert(`Update Error! ${e}`) });
+  }
+  
+  const deleteUser = () => {
+    if(window.confirm("정말 탈퇴하시겠습니까?")){
+      const asyncFun = async () => {
+        const deleteUser = await axios.post(SAPIBase + '/user/deleteUser',{id: userId});
+        console.log(deleteUser)
+      }
+      asyncFun().catch(e => { window.alert(`Update Error! ${e}`) });
+      navigate('/')
+    } else{
+      return
+    }
   }
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', padding: "30px" }}>
@@ -37,193 +87,192 @@ const ProfilePage = (props: {}) => {
           margin: '0px', color: 'primary.dark'
         }}> 회원 정보 </Typography>
 
-        <Box // 이메일 정보
-          sx={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}
-        >
-          <Typography sx={{
-            fontSize: "25px", fontWeight: 'bold',
-            margin: '30px 0px 20px 0px'
-          }}>
-            메일 정보
-          </Typography>
-          <Divider orientation="vertical" flexItem
-            sx={{ margin: "3px 8px 0px 8px" }} />
+        <Divider></Divider>
 
-          <Typography sx={{
-            fontSize: "20px", fontWeight: 'bold',
-            margin: '30px 7px 20px 0px'
-          }}>
-            이메일 -
-          </Typography>
-          <TextField // 이메일 정보 입력칸
-            label={email}
-            variant="filled" disabled
-            sx={{ width: '540px', margin: '0px 15px 0px 15px' }} />
+        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
 
-          {/* <Button variant="outlined" onClick={(e) => { navigate("/roomcreate") }}
-          sx={{
-            margin: '15px 10px 0px 0px'
-          }}>
-          <Typography
-            sx={{ fontSize: '20px', fontWeight: 'bold', alignSelf:'center'}}>
-            방 만들기
-          </Typography>
-        </Button> */}
-        </Box>
-
-        <Box // 개인 정보
-          sx={{
-            display: 'flex', alignItems: 'center', justifyItems: 'center',
-            margin: '20px 0px 20px 0px'
-          }}>
-          <Typography sx={{
-            fontSize: "25px", fontWeight: 'bold',
-            margin: '30px 0px 20px 0px'
-          }}  >
-            개인 정보
-          </Typography>
-
-          <Divider orientation="vertical" flexItem
-            sx={{ margin: "3px 8px 0px 8px" }} />
-
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{
-              fontSize: "20px", fontWeight: 'bold',
-              margin: '20px 14px 0px 14px'
+          <Box
+            sx={{
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'flex-start', justifyItems: 'center'
             }}>
-              이름 -
+            <Typography color='primary' sx={{
+              fontSize: "25px", fontWeight: 'bold',
+              margin: '10px 0px 10px 0px'
+            }}>
+              - 계정 정보
             </Typography>
 
-            <TextField // 이름 입력칸
-              label={"이름 - " + name}
-              variant="filled" disabled={isdisabled[0]}
-              sx={{ width: '300px', margin: '0px 15px 0px 15px' }}
-              onChange={(e) => { setName(e.target.value) }}
-            />
-
-            <Button variant="outlined" onClick={(e) => { changedisable(0); if (!isdisabled[0]) { setName(name + "->") } else { setName(name) } }}
-              sx={{
-                margin: '15px 10px 0px 0px'
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              <Typography sx={{
+                fontSize: "20px", fontWeight: 'bold', margin: '17px 30px 0px 0px'
               }}>
-              <Typography
-                sx={{ fontSize: '20px', fontWeight: 'bold', alignSelf: 'center' }}>
-                변경하기
+                이메일 -
               </Typography>
-            </Button>
+              <TextField
+                label={email} disabled
+                sx={{ width: '19.5vw' }} />
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', margin: '10px 0px 0px 0px' }}>              <Typography sx={{
+              fontSize: "20px", fontWeight: 'bold', margin: '17px 10px 0px 0px'
+            }}>
+              비밀번호 -
+            </Typography>
+              <TextField
+                label={!pwstate ? '기존 비밀번호 입력' : '인증되었습니다!'} type='password'
+                sx={{ width: '19.5vw' }}
+                onChange={(e) => { setCpassword(e.target.value) }} />
+
+              <Button variant="outlined" size='small' onClick={(e) => { console.log(password, cpassword); if (password == cpassword) { setPwstate(true) } }} sx={{
+                margin: '0px 0px 0px 10px'
+              }}>
+                <Typography
+                  sx={{ fontSize: '17px', fontWeight: 'bold', alignSelf: 'center', margin: '0px 0px 0px' }}>
+                  비밀번호 인증
+                </Typography>
+              </Button>
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', margin: '10px 0px 0px 0px' }}>
+              <TextField onChange={(e) => { setPassword(e.target.value) }}
+                label={'새 비밀번호 입력'} disabled={!pwstate} type='password'
+                sx={{ width: '17.5vw', margin: '0px 10px 0px 0px' }} />
+
+              <TextField onChange={(e) => { setCpassword(e.target.value) }}
+                label={'새 비밀번호 확인'} disabled={!pwstate} type='password'
+                sx={{ width: '17.5vw', margin: '0px 0px 0px 10px' }} />
+            </Box>
 
           </Box>
 
           <Divider orientation="vertical" flexItem
             sx={{ margin: "3px 8px 0px 8px" }} />
 
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{
-              fontSize: "20px", fontWeight: 'bold',
-              margin: '20px 10px 0px 10px'
+          <Box
+            sx={{
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'flex-start', justifyItems: 'center'
+            }}>
+            <Typography color='primary' sx={{
+              fontSize: "25px", fontWeight: 'bold',
+              margin: '10px 0px 10px 0px'
+            }}>
+              - 개인 정보
+            </Typography>
+
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              <Typography sx={{
+                fontSize: "20px", fontWeight: 'bold', margin: '17px 50px 0px 0px'
+              }}>
+                이름 -
+              </Typography>
+              <TextField
+                value={name}
+                sx={{ width: '19.5vw' }}
+                onChange={(e) => { setName(e.target.value) }} />
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', margin: '10px 0px 0px 0px' }}>              <Typography sx={{
+              fontSize: "20px", fontWeight: 'bold', margin: '17px 10px 0px 0px'
             }}>
               전화번호 -
             </Typography>
-
-            <TextField // 전화번호 입력칸
-              label={"전화번호 - " + phone} disabled={isdisabled[1]}
-              variant="filled"
-              sx={{ width: '300px', margin: '0px 15px 0px 15px' }}
-              onChange={(e) => { setName(e.target.value) }} />
-
-            <Button variant="outlined" onClick={(e) => { changedisable(1); if (!isdisabled[1]) { setName(phone + "->") } else { setName(phone) } }}
-              sx={{
-                margin: '15px 10px 0px 0px'
-              }}>
-              <Typography
-                sx={{ fontSize: '20px', fontWeight: 'bold', alignSelf: 'center' }}>
-                변경하기
-              </Typography>
-            </Button>
-
-          </Box>
-        </Box>
-
-        <Box // 계좌 정보
-          sx={{
-            display: 'flex', alignItems: 'center', justifyItems: 'center',
-            margin: '20px 0px 20px 0px'
-          }}>
-          <Typography sx={{
-            fontSize: "25px", fontWeight: 'bold',
-            margin: '30px 0px 20px 0px'
-          }}>
-            계좌 정보
-          </Typography>
-
-          <Divider orientation="vertical" flexItem
-            sx={{ margin: "3px 8px 0px 8px" }} />
-
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{
-              fontSize: "20px", fontWeight: 'bold',
-              margin: '20px 14px 0px 14px'
-            }}>
-              은행 -
-            </Typography>
-            <TextField // 은행 입력칸
-              label={"은행 - "+bank} disabled={isdisabled[2]}
-              variant="filled"
-              sx={{ width: '300px', margin: '0px 15px 0px 15px' }}
-              onChange={(e) => { setName(e.target.value) }} />
-            <Button variant="outlined" onClick={(e) => { changedisable(2); if (!isdisabled[2]) { setName(bank + "->") } else { setName(bank) } }}
-              sx={{
-                margin: '15px 10px 0px 0px'
-              }}>
-              <Typography
-                sx={{ fontSize: '20px', fontWeight: 'bold', alignSelf: 'center' }}>
-                변경하기
-              </Typography>
-            </Button>
+              <TextField
+                value={phone}
+                sx={{ width: '19.5vw' }}
+                onChange={(e) => { setPhone(e.target.value) }} />
+            </Box>
           </Box>
 
           <Divider orientation="vertical" flexItem
             sx={{ margin: "3px 8px 0px 8px" }} />
 
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{
-              fontSize: "20px", fontWeight: 'bold',
-              margin: '20px 30px 0px 30px'
+          <Box
+            sx={{
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'flex-start', justifyItems: 'center'
             }}>
-              계좌 -
+            <Typography color='primary' sx={{
+              fontSize: "25px", fontWeight: 'bold',
+              margin: '10px 0px 10px 0px'
+            }}>
+              - 계좌 정보
             </Typography>
-            <TextField // 계좌 입력칸
-              label={"계좌 - "+account}
-              variant="filled" disabled={isdisabled[3]}
-              sx={{ width: '300px', margin: '0px 15px 0px 15px' }}
-              onChange={(e) => { setName(e.target.value) }} />
-            <Button variant="outlined" onClick={(e) => { changedisable(3); if (!isdisabled[3]) { setName(account + "->") } else { setName(account) } }}
-              sx={{
-                margin: '15px 10px 0px 0px'
+
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              <Typography sx={{
+                fontSize: "20px", fontWeight: 'bold', margin: '17px 50px 0px 0px'
               }}>
+                은행 -
+              </Typography>
+              <TextField
+                value={bank}
+                sx={{ width: '19.5vw' }}
+                onChange={(e) => { setBank(e.target.value) }} />
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', margin: '10px 0px 0px 0px' }}>              <Typography sx={{
+              fontSize: "20px", fontWeight: 'bold', margin: '17px 10px 0px 0px'
+            }}>
+              계좌번호 -
+            </Typography>
+              <TextField
+                value={account}
+                sx={{ width: '19.5vw' }}
+                onChange={(e) => { setAccount(e.target.value) }} />
+            </Box>
+            <Box sx={{display:'flex'}}>
+            <Button variant="outlined" onClick={(e) => { deleteUser() }} sx={{
+              margin: '20px 20px 0px 0px', alignSelf: 'flex-end'
+            }}>
               <Typography
-                sx={{ fontSize: '20px', fontWeight: 'bold', alignSelf: 'center' }}>
-                변경하기
+                sx={{ fontSize: '27px', fontWeight: 'bold', alignSelf: 'center' }}>
+                탈퇴하기
               </Typography>
             </Button>
+            <Button variant="outlined" onClick={(e) => { changeProfile() }} sx={{
+              margin: '20px 0px 0px 0px', alignSelf: 'flex-end'
+            }}>
+              <Typography
+                sx={{ fontSize: '27px', fontWeight: 'bold', alignSelf: 'center' }}>
+                변경 내용 저장
+              </Typography>
+            </Button>
+            </Box>
+
           </Box>
 
         </Box>
-
       </Box>
 
       <Box sx={{ border: '2px solid', borderRadius: '20px', padding: "30px", borderColor: 'primary.dark' }}>
-        <Typography sx={{
-          fontSize: "30px", fontWeight: 'bold',
-          margin: '0px', color: 'primary.dark'
-        }}> 참여중인 방 </Typography>
+        <Box sx={{ display: "flex", justifyContent: 'space-around' }}>
+          <Typography sx={{
+            fontSize: "30px", fontWeight: 'bold',
+            margin: '0px', color: 'primary.dark'
+          }}> 생성한 방 </Typography>
 
-        <Box sx={{ display: "flex" }}>
-          <Box sx={{ display: "flex", flexDirection:'column' }}>
+          <Typography sx={{
+            fontSize: "30px", fontWeight: 'bold',
+            margin: '0px', color: 'primary.dark'
+          }}> 참여중인 방 </Typography>
+        </Box>
 
+        <Box sx={{ display: "flex", justifyContent: 'space-evenly' }}>
+          <Box sx={{ display: "flex", flexDirection: 'column' }}>
+            <Box>
+
+              
+              <SimpleRoomInfo1></SimpleRoomInfo1>
+
+            </Box>
           </Box>
-          <Box sx={{ display: "flex", flexDirection:'column' }}>
 
-          </Box>
+          <Divider orientation="vertical" flexItem
+            sx={{ margin: "3px 0px 0px 0px" }} />
+
+            <SimpleRoomInfo2></SimpleRoomInfo2>
         </Box>
 
 

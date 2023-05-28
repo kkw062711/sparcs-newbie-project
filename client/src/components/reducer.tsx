@@ -1,7 +1,7 @@
 
 const initialState = {
     page: "Home",
-    auth: false
+    auth: localStorage.getItem('auth')
 }
 
 export default function Reducer(state = initialState, action) {
@@ -12,9 +12,10 @@ export default function Reducer(state = initialState, action) {
                 page: action.page
             }
             case 'changeauth':
+                localStorage.setItem("auth",action.auth)
                 return {
                     ...state,
-                    auth: action.auth
+                    auth: localStorage.getItem('auth')
                 }
                 default:
             

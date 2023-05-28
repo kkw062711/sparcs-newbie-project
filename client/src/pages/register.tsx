@@ -33,7 +33,6 @@ const RegisterPage = (props: {}) => {
   const sendmail = (e) => {
     const asyncFun = async () => {
       await axios.post(SAPIBase + '/user/sendEmail', { email: email });
-      console.log(localStorage.getItem('authnum'))
     }
     asyncFun().catch(e => window.alert(`sendemail Error! ${e}`));
   }
@@ -43,9 +42,13 @@ const RegisterPage = (props: {}) => {
         email: email, password: password, name: name,
         phone: phone, bank: bank, account: account
       });
-      console.log(localStorage.getItem('authnum'))
     }
     asyncFun().catch(e => window.alert(`addUser Error! ${e}`));
+  }
+
+  const checkEmail = () => {
+    let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])");
+    return regex.test(email)
   }
 
   //
@@ -97,8 +100,8 @@ const RegisterPage = (props: {}) => {
           borderRadius: '20px',
           margin: '0 auto',
           marginTop: '50px',
-          width: '400px',
-          height: '500px',
+          width: '26vw',
+          height: '65vh',
         }}>
 
         {/* 회원가입 헤더 */}
@@ -134,7 +137,7 @@ const RegisterPage = (props: {}) => {
             <Box>
               <Box // 이메일 입력, 인증칸
                 sx={{
-                  width: '300px',
+                  width: '19.5vw',
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
@@ -165,7 +168,10 @@ const RegisterPage = (props: {}) => {
                   margin: '50px 0px 0px 0px'
                 }}>
                 <Button variant="contained" size="large"
-                  type="submit" onClick={(e) => { setLevel(level + 1) }}>
+                  type="submit" onClick={(e) => {
+                    if (checkEmail()) { setLevel(level + 1) }
+                    else { window.alert("올바른 이메일을 입력해 주세요!") }
+                  }}>
                   <Typography fontSize={"22px"} sx={{ margin: '0px 50px 0px 50px' }}>
                     다음
                   </Typography>
@@ -179,13 +185,13 @@ const RegisterPage = (props: {}) => {
             <Box>
               <Box // 비번, 비번확인 입력
                 sx={{
-                  width: '300px',
+                  width: '19.5vw',
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
                 <Box // 비번, 비번확인 입력칸
                   sx={{
-                    width: '300px',
+                    width: '19.5vw',
                     display: 'flex',
                     flexDirection: 'column'
                   }}>
@@ -209,7 +215,10 @@ const RegisterPage = (props: {}) => {
                   margin: '50px 0px 0px 0px'
                 }}>
                 <Button variant="contained" size="large"
-                  type="submit" onClick={(e) => { if(password==cpassword){setLevel(level+1)} else{window.alert("비밀번호가 다릅니다!")} }}>
+                  type="submit" onClick={(e) => {
+                    if (password && password == cpassword) { setLevel(level + 1) }
+                    else { window.alert("비밀번호를 올바르게 입력해 주세요!") }
+                  }}>
                   <Typography fontSize={"22px"} sx={{ margin: '0px 50px 0px 50px' }}>
                     다음
                   </Typography>
@@ -223,13 +232,13 @@ const RegisterPage = (props: {}) => {
             <Box>
               <Box // 전화번호, 이름 입력
                 sx={{
-                  width: '300px',
+                  width: '19.5vw',
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
                 <Box // 전화번호, 이메일 입력칸
                   sx={{
-                    width: '300px',
+                    width: '19.5vw',
                     display: 'flex',
                     flexDirection: 'column'
                   }}>
@@ -253,7 +262,8 @@ const RegisterPage = (props: {}) => {
                   margin: '50px 0px 0px 0px'
                 }}>
                 <Button variant="contained" size="large"
-                  type="submit" onClick={(e) => { setLevel(level + 1) }}>
+                  type="submit" onClick={(e) => { if(phone && name){ setLevel(level + 1) }
+                  else{window.alert("올바른 전화번호와 이름을 입력해 주세요!")}}}>
                   <Typography fontSize={"22px"} sx={{ margin: '0px 50px 0px 50px' }}>
                     다음
                   </Typography>
@@ -267,7 +277,7 @@ const RegisterPage = (props: {}) => {
             <Box>
               <Box // 은행, 계좌 입력
                 sx={{
-                  width: '300px',
+                  width: '19.5vw',
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
@@ -290,7 +300,12 @@ const RegisterPage = (props: {}) => {
                   margin: '50px 0px 0px 0px'
                 }}>
                 <Button variant="contained" size="large"
-                  type="submit" onClick={(e) => { try{addUser(e);navigate('/');} catch{window.alert("ERROR")}}}>
+                  type="submit" onClick={(e) => { 
+                    if(bank && account){ 
+                      try { addUser(e); navigate('/'); } 
+                      catch { window.alert("ERROR") }
+                    }
+                  else{window.alert("올바른  은행과 계좌를 입력해 주세요!")}}}>
                   <Typography fontSize={"22px"} sx={{ margin: '0px 50px 0px 50px' }}>
                     가입하기
                   </Typography>
@@ -312,53 +327,4 @@ const RegisterPage = (props: {}) => {
   )
 };
 
-
-/*
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
-import Paper from '@mui/material/Paper';
-import Slide from '@mui/material/Slide';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Theme } from '@mui/material/styles';
-
-const icon = (
-  <Paper sx={{ m: 1 }} elevation={4}>
-    <Box component="svg" sx={{ width: 100, height: 100 }}>
-      <Box
-        component="polygon"
-        sx={{
-          fill: (theme: Theme) => theme.palette.common.white,
-          stroke: (theme) => theme.palette.divider,
-          strokeWidth: 1,
-        }}
-        points="0,100 50,00, 100,100"
-      />
-    </Box>
-  </Paper>
-);
-
-export default function SimpleSlide() {
-  const [checked, setChecked] = React.useState(false);
-
-  const handleChange = () => {
-    setChecked((prev) => !prev);
-  };
-
-  return (
-    <Box sx={{ height: 180 }}>
-      <Box sx={{ width: `calc(100px + 16px)` }}>
-        <FormControlLabel
-          control={<Switch checked={checked} onChange={handleChange} />}
-          label="Show"
-        />
-        <Slide direction="up" in={checked} mountOnEnter unmountOnExit>
-          {icon}
-        </Slide>
-      </Box>
-    </Box>
-  );
-}
-
- */
 export default RegisterPage;
