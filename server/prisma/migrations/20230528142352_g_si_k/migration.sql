@@ -7,6 +7,7 @@ CREATE TABLE "user" (
     "phone" TEXT NOT NULL,
     "bank" TEXT NOT NULL,
     "account" TEXT NOT NULL,
+    "roomjoined" TEXT[],
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -26,14 +27,9 @@ CREATE TABLE "room" (
     "isclosed" BOOLEAN NOT NULL DEFAULT false,
     "iscompleted" BOOLEAN NOT NULL DEFAULT false,
     "isrecieved" BOOLEAN NOT NULL DEFAULT false,
+    "members" TEXT[],
 
     CONSTRAINT "room_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "_roomTouser" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
 );
 
 -- CreateIndex
@@ -44,15 +40,3 @@ CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "room_id_key" ON "room"("id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_roomTouser_AB_unique" ON "_roomTouser"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_roomTouser_B_index" ON "_roomTouser"("B");
-
--- AddForeignKey
-ALTER TABLE "_roomTouser" ADD CONSTRAINT "_roomTouser_A_fkey" FOREIGN KEY ("A") REFERENCES "room"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_roomTouser" ADD CONSTRAINT "_roomTouser_B_fkey" FOREIGN KEY ("B") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
