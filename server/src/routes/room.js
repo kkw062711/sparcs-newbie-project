@@ -1,21 +1,58 @@
 const { PrismaClient } = require("@prisma/client")
 
 const express = require('express');
-const room = new PrismaClient().room;
+const client = new PrismaClient();
 const router = express.Router();
 
 
-router.post('/getRoom', async (req, res) => {
+router.get('/getRoom', async (req, res) => {
     try {
-        const { type, value } = req.body;
         // type 는 default, filter, search, sort 중 하나의 값을 갖고
         // value 는 String 값을 가짐
         // 방 필터, 정렬, 검색은 클라이언트로 옮김.
-        const getRoom = await room.findMany({
-            orderBy: { createdAt: 'desc' }
+        const getRoom = await client.room.findMany({})
+        return res.status(200).json(getRoom)
+    } catch (e) {
+        return res.status(500).json({ error: e });
+    }
+});
+
+router.post('/getMyRoom', async (req, res) => {
+    try {
+        const { id } = req.body
+        const getMyRoom = await client.room.findMany({
+            where: {
+                members: {
+                    has: parseInt(id)
+                }
+            }
         })
-        if (getRoom) return res.status(200).json(getRoom);
-        else return res.status(500).json({ error: getRoom })
+        return res.status(200).json(getMyRoom)
+    } catch (e) {
+        return res.status(500).json({ error: e });
+    }
+});
+
+router.post('/getRoombyId', async (req, res) => {
+    try {
+        const { id } = req.body
+        // type 는 default, filter, search, sort 중 하나의 값을 갖고
+        // value 는 String 값을 가짐
+        // 방 필터, 정렬, 검색은 클라이언트로 옮김.
+        const getRoom = await client.room.findMany({
+            where: { id: parseInt(id) }
+        })
+        let Users = []
+        for (var i = 0; i < getRoom[0].members.length; i++) {
+            const User = await client.user.findUnique({
+                where: {
+                    id: getRoom[0].members[i]
+                }
+            })
+            Users.push(User)
+        }
+        getRoom[0] = { ...getRoom[0], members: Users }
+        return res.status(200).json(getRoom)
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -23,32 +60,71 @@ router.post('/getRoom', async (req, res) => {
 
 router.post('/addRoom', async (req, res) => {
     try {
-        const { name, creator, image, description, category, price, due } = req.body;
-        const addRoom = await room.create({
+        const { name, creator, image, description, category, price } = req.body;
+        const addRoom = await client.room.create({
             data: {
                 name: name,
                 creator: creator,
                 image: image,
                 description: description,
                 category: category,
-                price: price,
-                due: due
+                price: parseInt(price),
             }
         })
-        if (!addRoom) return res.status(500).json({ error: addRoom })
-        else return res.status(200).json({ isOK: true });
+        const roomid = addRoom.id
+        const RoomCreator = parseInt(addRoom.creator)
+        const members = await client.room.findUnique({
+            where: { id: parseInt(roomid) },
+            select: { members: true }
+        })
+        members.members.push(RoomCreator)
+        const newaddRoom = await client.room.update({
+            where: { id: parseInt(roomid) },
+            data: {
+                members: members.members
+            }
+        })
+        const userroom = await client.user.findUnique({
+            where: { id: parseInt(creator) },
+            select: { roomjoined: true }
+        })
+        const updateUserRoom = await client.user.update({
+            where: { id: parseInt(creator) },
+            data: {
+                roomjoined: [...userroom.roomjoined, parseInt(roomid)]
+            }
+        })
+        return res.status(200).json({ room: newaddRoom, user: updateUserRoom });
     } catch (e) {
         return res.status(500).json({ error: e });
     }
 });
-
 router.post('/deleteRoom', async (req, res) => {
     try {
         const { id } = req.body;
-        const deleteRoom = await room.delete({
-            whiere:{id:id}
+        const users = await client.room.findUnique({
+            where:{
+                id:parseInt(id),
+            }
         })
-        if (!deleteRoom) return res.status(500).json({ error: "Can't Delete Room" })
+        users.members.forEach(async (user)=>{
+            const userroom = await client.user.findUnique({
+                where: { id: parseInt(user) },
+                select: { roomjoined: true }
+            }) 
+            const updateUserRoom = await client.user.update({
+                where: { id: parseInt(user) },
+                data: {
+                    roomjoined: [...userroom.roomjoined.filter((i) => i !== parseInt(id))]
+                }
+            })
+        })
+        const deleteRoom = await client.room.delete({
+            where: {
+                id: parseInt(id),
+            }
+        })
+        if (deleteRoom) return res.status(500).json({ error: "Can't Delete Room" })
         else return res.status(200).json({ isOK: true });
     } catch (e) {
         return res.status(500).json({ error: e });
@@ -58,9 +134,9 @@ router.post('/deleteRoom', async (req, res) => {
 router.post('/updateRoomInfo', async (req, res) => {
     try {
         const { id, name, image, description, category, price } = req.body;
-        const updateRoomInfo = await room.update({
-            where:{id:id},
-            data:{
+        const updateRoomInfo = await client.room.update({
+            where: { id: parseInt(id) },
+            data: {
                 name: name,
                 image: image,
                 description: description,
@@ -78,38 +154,50 @@ router.post('/updateRoomInfo', async (req, res) => {
 
 router.post('/updateRoomMember', async (req, res) => {
     try {
-        const { id, members, ifadd } = req.body;
-        // const updateRoomMember = await room.update({
-        //     where:{id:id},
+        const { roomid, userid, ifadd } = req.body;
 
-        // })
-        const roommember = await room.findUnique({
-            where: { id: id },
+        const roommember = await client.room.findUnique({
+            where: { id: parseInt(roomid) },
             select: { members: true }
         })
-        const updateRoomMember = null
+
+        const userroom = await client.user.findUnique({
+            where: { id: parseInt(userid) },
+            select: { roomjoined: true }
+        })
+
+
         if (ifadd) {
-            updateRoomMember = await room.update({
-                where: { id: id },
+            const updateRoomMember = await client.room.update({
+                where: { id: parseInt(roomid) },
                 data: {
-                    roomjoined: {
-                        set: [...roommember.members, members]
-                    }
+                    members: [...roommember.members, parseInt(userid)]
                 }
             })
+            const updateUserRoom = await client.user.update({
+                where: { id: parseInt(userid) },
+                data: {
+                    roomjoined: [...userroom.roomjoined, parseInt(roomid)]
+                }
+            })
+            return res.status(200).json({ room: updateRoomMember, user: updateUserRoom });
         }
         else {
-            updateRoomMember = await room.update({
-                where: { id: id },
+            // console.log(roommember.members.filter((i) => i !== parseInt(userid)))
+            const updateRoomMember = await client.room.update({
+                where: { id: parseInt(roomid) },
                 data: {
-                    members: {
-                        set: members.filter((i) => i !== id)
-                    }
+                    members: [...roommember.members.filter((i) => i !== parseInt(userid))]
                 }
             })
+            const updateUserRoom = await client.user.update({
+                where: { id: parseInt(userid) },
+                data: {
+                    roomjoined: [...userroom.roomjoined.filter((i) => i !== parseInt(roomid))]
+                }
+            })
+            return res.status(200).json({ room: updateRoomMember, user: updateUserRoom });
         }
-        if (!updateRoomMember) return res.status(500).json({ error: updateRoomMember })
-        else return res.status(200).json({ isOK: true });
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -117,16 +205,18 @@ router.post('/updateRoomMember', async (req, res) => {
 
 router.post('/updateRoomState', async (req, res) => {
     try {
-        const { id, ispurchased, isclosed, iscompleted, isrecieved } = item;
-        const updateRoomState = room.update({
-            where:{id:id},
-            data:{
+        const { id, ispurchased, isclosed, iscompleted, isrecieved } = req.body;
+        
+        const updateRoomState = await client.room.update({
+            where: { id: parseInt(id) },
+            data: {
                 ispurchased: ispurchased,
                 isclosed: isclosed,
                 iscompleted: iscompleted,
                 isrecieved: isrecieved
             }
         })
+        console.log(updateRoomState)
         if (!updateRoomState) return res.status(500).json({ error: updateRoomState })
         else return res.status(200).json({ isOK: true });
     } catch (e) {

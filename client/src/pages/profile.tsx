@@ -7,16 +7,39 @@ import { useInterval } from "../tools/interval";
 import { SAPIBase } from "../tools/api";
 import store from "../components/store";
 import { Box, TextField, Typography, Button, Divider, OutlinedInput, Switch } from "@mui/material";
-import SimpleRoomInfo1 from "../components/simpleroominfo1";
-import SimpleRoomInfo2 from "../components/simpleroominfo2";
+import SimpleRoomInfo from "../components/simpleroominfo";
 // MUI import
-
-
+interface IAPIResponseRoom {
+  category: string, creator: string, createdat: string,
+  description: string, image: string, isclosed: boolean, id: number
+  ispurchased: boolean, iscompleted: boolean, isrecieved: boolean,
+  members: number[], name: string, price: number
+}
+interface IAPIResponseUser {name: string}
 const ProfilePage = (props: {}) => {
   const userId = useSelector((state: RootState) => state.auth)
   useEffect(() => {
-    getProfile()
     store.dispatch({ type: 'changepage', page: 'Profile' })
+    getProfile()
+
+    const getUsernName = async () => {
+      const { data } = await axios.post<IAPIResponseUser[]>(SAPIBase + '/user/getUser', {id:userId});
+      setLAPIResponseUser(data);
+    };
+    getUsernName().catch((e) => window.alert(`Error while running API Call: ${e}`));
+
+
+
+    let BComponentExited = false;
+    const asyncFun = async () => {
+      const { data } = await axios.post<IAPIResponseRoom[]>(SAPIBase + '/room/getMyRoom', { id: userId });
+      if (BComponentExited) return;
+      // console.log(data[0].members.length)
+      setLAPIResponseRoom(data);
+    };
+    asyncFun().catch((e) => window.alert(`Error while running API Call: ${e}`));
+    return () => { BComponentExited = true; }
+
   }, []);
 
   const navigate = useNavigate();
@@ -28,6 +51,8 @@ const ProfilePage = (props: {}) => {
   const [bank, setBank] = useState('');
   const [account, setAccount] = useState('');
   const [pwstate, setPwstate] = useState(false);
+  const [LAPIResponseRoom, setLAPIResponseRoom] = useState<IAPIResponseRoom[]>([]);
+  const [LAPIResponseUser, setLAPIResponseUser] = useState<IAPIResponseUser[]>([]);
 
   const getProfile = () => {
     const asyncFun = async () => {
@@ -63,16 +88,16 @@ const ProfilePage = (props: {}) => {
     }
     asyncFun().catch(e => { window.alert(`Update Error! ${e}`) });
   }
-  
+
   const deleteUser = () => {
-    if(window.confirm("정말 탈퇴하시겠습니까?")){
+    if (window.confirm("정말 탈퇴하시겠습니까?")) {
       const asyncFun = async () => {
-        const deleteUser = await axios.post(SAPIBase + '/user/deleteUser',{id: userId});
+        const deleteUser = await axios.post(SAPIBase + '/user/deleteUser', { id: userId });
         console.log(deleteUser)
       }
       asyncFun().catch(e => { window.alert(`Update Error! ${e}`) });
       navigate('/')
-    } else{
+    } else {
       return
     }
   }
@@ -222,23 +247,23 @@ const ProfilePage = (props: {}) => {
                 sx={{ width: '19.5vw' }}
                 onChange={(e) => { setAccount(e.target.value) }} />
             </Box>
-            <Box sx={{display:'flex'}}>
-            <Button variant="outlined" onClick={(e) => { deleteUser() }} sx={{
-              margin: '20px 20px 0px 0px', alignSelf: 'flex-end'
-            }}>
-              <Typography
-                sx={{ fontSize: '27px', fontWeight: 'bold', alignSelf: 'center' }}>
-                탈퇴하기
-              </Typography>
-            </Button>
-            <Button variant="outlined" onClick={(e) => { changeProfile() }} sx={{
-              margin: '20px 0px 0px 0px', alignSelf: 'flex-end'
-            }}>
-              <Typography
-                sx={{ fontSize: '27px', fontWeight: 'bold', alignSelf: 'center' }}>
-                변경 내용 저장
-              </Typography>
-            </Button>
+            <Box sx={{ display: 'flex' }}>
+              <Button variant="outlined" onClick={(e) => { deleteUser() }} sx={{
+                margin: '20px 20px 0px 0px', alignSelf: 'flex-end'
+              }}>
+                <Typography
+                  sx={{ fontSize: '27px', fontWeight: 'bold', alignSelf: 'center' }}>
+                  탈퇴하기
+                </Typography>
+              </Button>
+              <Button variant="outlined" onClick={(e) => { changeProfile() }} sx={{
+                margin: '20px 0px 0px 0px', alignSelf: 'flex-end'
+              }}>
+                <Typography
+                  sx={{ fontSize: '27px', fontWeight: 'bold', alignSelf: 'center' }}>
+                  변경 내용 저장
+                </Typography>
+              </Button>
             </Box>
 
           </Box>
@@ -263,16 +288,42 @@ const ProfilePage = (props: {}) => {
           <Box sx={{ display: "flex", flexDirection: 'column' }}>
             <Box>
 
-              
-              <SimpleRoomInfo1></SimpleRoomInfo1>
+              {
+                LAPIResponseRoom.map((val, i) =>
+                  val.creator == userId
+                    ?
+                    <SimpleRoomInfo username={LAPIResponseUser} text={'방 삭제'} mcount={val.members.length} category={val.category} createdat={val.createdat}
+                      creator={val.creator} id={val.id} image={val.image} name={val.name} isclosed={val.isclosed}
+                      ispurchased={val.ispurchased} iscompleted={val.iscompleted} isrecieved={val.isrecieved} key={i} />
+                    :
+                    <Box sx={{width: '43vw'}}></Box>
+                )
+              }
+
 
             </Box>
           </Box>
 
           <Divider orientation="vertical" flexItem
             sx={{ margin: "3px 0px 0px 0px" }} />
+          <Box sx={{ display: "flex", flexDirection: 'column' }}>
+            <Box>
 
-            <SimpleRoomInfo2></SimpleRoomInfo2>
+              {
+                LAPIResponseRoom.map((val, i) =>
+                  val.creator == userId
+                    ?
+                    <Box sx={{width: '43vw'}}></Box>
+                    :
+                    <SimpleRoomInfo username={LAPIResponseUser} text={'방 탈퇴'} mcount={val.members.length} category={val.category} createdat={val.createdat}
+                      creator={val.creator} id={val.id} image={val.image} name={val.name} isclosed={val.isclosed}
+                      ispurchased={val.ispurchased} iscompleted={val.iscompleted} isrecieved={val.isrecieved} key={i} />
+                )
+              }
+
+
+            </Box>
+          </Box>
         </Box>
 
 

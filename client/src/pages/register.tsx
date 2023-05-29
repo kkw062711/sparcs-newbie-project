@@ -6,6 +6,8 @@ import { SAPIBase } from "../tools/api";
 import store from "../components/store";
 import WavingHandIcon from '@mui/icons-material/WavingHand';
 import { TextField, Typography, Button, Box, Paper, Theme, FormControlLabel, Switch, Slide } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "../components/reducer";
 // const nodemailer = require('nodemailer')
 // import * as nodemailer from 'nodemailer';
 // MUI import
@@ -21,6 +23,7 @@ const RegisterPage = (props: {}) => {
 
   const boxref = useRef()
 
+  const [id, setId] = useState(0)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
@@ -38,7 +41,7 @@ const RegisterPage = (props: {}) => {
   }
   const addUser = (e) => {
     const asyncFun = async () => {
-      await axios.post(SAPIBase + '/user/addUser', {
+      const added = await axios.post(SAPIBase + '/user/addUser', {
         email: email, password: password, name: name,
         phone: phone, bank: bank, account: account
       });
@@ -302,7 +305,7 @@ const RegisterPage = (props: {}) => {
                 <Button variant="contained" size="large"
                   type="submit" onClick={(e) => { 
                     if(bank && account){ 
-                      try { addUser(e); navigate('/'); } 
+                      try {addUser(e); navigate('/login'); } 
                       catch { window.alert("ERROR") }
                     }
                   else{window.alert("올바른  은행과 계좌를 입력해 주세요!")}}}>

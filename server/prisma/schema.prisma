@@ -19,7 +19,7 @@ model user {
     phone String // 전화번호 (-포함 국가번호 포함)
     bank String // 은행 이름 (카카오뱅크 우리은행 등)
     account String // 계좌번호 (XXXXX-XXXX-XXXX 꼴)
-    roomjoined String[] // String에는 방의 Id가 들어감
+    roomjoined Int[] // Int에는 방의 Id가 들어감
 }
 
 model room {
@@ -31,11 +31,10 @@ model room {
     description  String // 공구할 제품 설명
     category  String // 공구할 제품의 카테고리
     price  Int // 공구 제품 가격
-    due  String // 공구 듀
     ispurchased Boolean @default(false) // 물품 구매 여부
     isclosed  Boolean @default(false)   // 방의 마감 여부
     iscompleted Boolean @default(false)       // 방의 정산 여부
     isrecieved Boolean @default(false)     // 제품 수령 여부
-    members String[]  // 방에 참여하고 있는 사람들 목록 (Int에는 유저 ID가 들어감)
+    members Int[]  // 방에 참여하고 있는 사람들 목록 (Int에는 유저 ID가 들어감)
 
 }

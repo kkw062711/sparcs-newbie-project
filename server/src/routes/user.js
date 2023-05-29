@@ -32,7 +32,7 @@ router.post('/addUser', async (req, res) => {
             }
         })
         if (!addUser) return res.status(500).json({ error: addUser })
-        else { return res.status(200).json({ isOK: true }); }
+        else { return res.status(200).json({ isOK: true, added : addUser }); }
     } catch (e) {
         return res.status(500).json({ error: e });
     }

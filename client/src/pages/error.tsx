@@ -11,7 +11,6 @@ import { Box, Typography } from "@mui/material";
 
 const ErrorPage = (props: {}) => {
   useEffect(() => {
-    console.log('');
     store.dispatch({type: 'changepage', page: 'Error'})
   }, []);
   const navigate = useNavigate();

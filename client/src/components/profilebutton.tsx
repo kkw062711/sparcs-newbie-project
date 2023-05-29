@@ -63,7 +63,7 @@ const ProfileButton = () => {
         <MenuItem onClick={(e) => { setAnchorEl(null); navigate('/profile') }}>
           <AccountCircle fontSize='large' color='secondary' sx={{ margin: '0px 8px 0px 0px' }} /> 프로필 보기
         </MenuItem>
-        <MenuItem onClick={(e) => { setAnchorEl(null); store.dispatch({ type: 'changeauth', auth: '0' }); navigate('/') }}>
+        <MenuItem onClick={(e) => { setAnchorEl(null); store.dispatch({ type: 'changeauth', auth: '0' }); navigate('/'); location.reload() }}>
           <Logout fontSize='large' color='secondary' sx={{ margin: '0px 8px 0px 0px' }} /> 로그아웃
         </MenuItem>
       </Menu>

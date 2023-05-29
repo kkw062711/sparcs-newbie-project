@@ -11,7 +11,6 @@ import { TextField, Typography, Button, Box } from "@mui/material";
 
 const LoginPage = (props: {}) => {
   useEffect(() => {
-    console.log('');
     store.dispatch({ type: 'changepage', page: 'Login' })
   }, []);
 

@@ -7,7 +7,7 @@ CREATE TABLE "user" (
     "phone" TEXT NOT NULL,
     "bank" TEXT NOT NULL,
     "account" TEXT NOT NULL,
-    "roomjoined" TEXT[],
+    "roomjoined" INTEGER[],
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -22,12 +22,11 @@ CREATE TABLE "room" (
     "description" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
-    "due" TEXT NOT NULL,
     "ispurchased" BOOLEAN NOT NULL DEFAULT false,
     "isclosed" BOOLEAN NOT NULL DEFAULT false,
     "iscompleted" BOOLEAN NOT NULL DEFAULT false,
     "isrecieved" BOOLEAN NOT NULL DEFAULT false,
-    "members" TEXT[],
+    "members" INTEGER[],
 
     CONSTRAINT "room_pkey" PRIMARY KEY ("id")
 );

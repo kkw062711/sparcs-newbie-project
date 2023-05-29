@@ -1,15 +1,52 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/header.css";
 import { Box, Typography, Divider, Button, TextField, MenuItem, Select } from "@mui/material";
+import store from "./store";
+import { Category } from "@mui/icons-material";
+import axios from "axios";
+import { SAPIBase } from "../tools/api";
+import { useSelector } from "react-redux";
+import { RootState } from "./reducer";
 
-const RoomInfo = () => {
+interface IAPIResponseUser { name: string }
 
+const RoomInfo = (props: {  category, createdat, creator, description, id, image, name, price, members, key }) => {
+    const userId = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
+    const [joined, setJoined] = useState(false)
+
+    const [LAPIResponseuser, setLAPIResponseUser] = useState<IAPIResponseUser[]>([]);
+    useEffect(() => {
+        const getUsernName = async () => {
+            const { data } = await axios.post<IAPIResponseUser[]>(SAPIBase + '/user/getUser', { id: props.creator });
+            setLAPIResponseUser(data);
+        };
+        getUsernName().catch((e) => window.alert(`Error while running API Call: ${e}`));
+
+        props.members.forEach(element => {
+            if (element == userId) {
+                setJoined(true)
+            }
+        })
+        return () => { }
+    }, []);
+
+    const roomjoin = () => {
+        const asyncFun = async () => {
+            const Roomjoin = await axios.post(SAPIBase + '/room/updateRoomMember', {
+                roomid: props.id, userid: userId, ifadd: true
+            });
+            store.dispatch({ type: 'changeroom', room: props.id })
+            navigate('/room')
+        }
+        asyncFun().catch(e => window.alert(`Login Error! ${e}`));
+    }
+
 
     return (
         <Box sx={{
-            border: '2px solid', borderRadius: '20px', width: '95vw', height:'37vh',display: 'flex',
+            border: '2px solid', borderRadius: '20px', width: '95vw', height: '37vh', display: 'flex',
             borderColor: 'primary.dark', margin: '20px 0px 0px 0px', alignSelf: 'center'
         }}>
             <Box sx={{
@@ -26,26 +63,26 @@ const RoomInfo = () => {
                     <Typography color={'secondary'} sx={{
                         fontWeight: 'bold', alignSelf: 'center'
                     }}>
-                        [카테고리]
+                        [{props.category}]
                     </Typography>
                     <Typography color={'primary.dark'} sx={{
                         margin: '0px 0px 0px 0.3vw', fontWeight: 'bold', fontSize: '30px'
                     }}>
-                        방 제목
+                        {props.name}
                     </Typography>
                     <Typography color={'secondary.dark'} sx={{
                         margin: '0px 0px 0px 0.5vw', fontWeight: 'bold', fontSize: '20px', alignSelf: 'flex-end'
                     }}>
-                        - 생성자
+                        - by. {LAPIResponseuser.name}
                     </Typography>
                     <Typography color={'secondary'} sx={{
                         margin: '0px 0px 0px 0.5vw', fontWeight: 'bold', fontSize: '20px', alignSelf: 'flex-end'
                     }}>
-                        (~언제까지)
+                        {props.createdat}
                     </Typography>
                 </Box>
                 <TextField
-                    disabled multiline maxRows={3} label="설명" value={" "} sx={{
+                    disabled multiline maxRows={3} label="설명" value={props.description} sx={{
                         width: '40vw'
                     }} />
             </Box>
@@ -54,34 +91,27 @@ const RoomInfo = () => {
             <Box sx={{
                 width: '25vw', padding: '15px', alignSelf: 'center'
             }}>
-                <Box sx={{display:'flex'}}>
-                <Typography color={'primary.dark'} sx={{ fontWeight: 'bold', fontSize: '27px' }}>
-                    멤버수 - n명
-                </Typography>
-
-                <Select
-                  value={'1'} variant="standard" sx={{margin:'0px 0px 0px 10px'}}
-                  label="정렬 옵션" >
-                  <MenuItem value="1">
-                    <Typography color={'primary.dark'}
-                      sx={{ fontSize: '20px', fontWeight: 'bold'}}>
-                      1
+                <Box sx={{ display: 'flex' }}>
+                    <Typography color={'primary.dark'} sx={{ fontWeight: 'bold', fontSize: '27px' }}>
+                        멤버수 - {props.members.length}명
                     </Typography>
-                  </MenuItem>
-                </Select>
+
                 </Box>
 
                 <Box sx={{ display: 'flex', margin: '10px 0px 10px 0px' }}>
                     <Typography color={'primary.dark'} sx={{ fontWeight: 'bold', fontSize: '27px' }}>
-                        가격 - n원
+                        가격 - {props.price}원
                     </Typography>
                     <Typography color={'primary'} sx={{
                         fontWeight: 'bold', fontSize: '20px', alignSelf: 'flex-end', margin: '0px 0px 0px 10px'
                     }}>
-                        / 1인당 n원
+                        / 1인당 {props.price / props.members.length}원
                     </Typography>
                 </Box>
-                <Button variant="outlined" onClick={(e) => { navigate('/room') }}
+                <Button variant="outlined" onClick={(e) => {
+                    store.dispatch({ type: 'changeroom', room: props.id })
+                    navigate("/room")
+                }}
                     sx={{
                         margin: '0px 20px 0px 0px'
                     }}>
@@ -90,16 +120,31 @@ const RoomInfo = () => {
                         방 정보
                     </Typography>
                 </Button>
+                {userId == '0'
+                    ?
+                    <Button variant="outlined" disabled={true}
+                        onClick={(e) => { roomjoin() }}
+                        sx={{
+                            margin: ''
+                        }}>
+                        <Typography
+                            sx={{ fontSize: '25px', fontWeight: 'bold' }}>
+                            로그인 필요
+                        </Typography>
+                    </Button>
+                    :
+                    <Button variant="outlined" disabled={!joined ? false : true}
+                        onClick={(e) => { roomjoin() }}
+                        sx={{
+                            margin: ''
+                        }}>
+                        <Typography
+                            sx={{ fontSize: '25px', fontWeight: 'bold' }}>
+                            {!joined ? "참여하기" : "참여함"}
+                        </Typography>
+                    </Button>
+                }
 
-                <Button variant="outlined" onClick={(e) => {  }}
-                    sx={{
-                        margin: ''
-                    }}>
-                    <Typography
-                        sx={{ fontSize: '25px', fontWeight: 'bold' }}>
-                        방 참여하기
-                    </Typography>
-                </Button>
 
             </Box>
         </Box>
