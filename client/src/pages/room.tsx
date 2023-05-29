@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../components/reducer";
 
 interface IAPIResponse1 {
-  category: string, creator: string, createdat:string,
+  category: string, creator: string, createdat: string,
   description: string, image: string, isclosed: boolean,
   ispurchased: boolean, iscompleted: boolean, isrecieved: boolean,
   members: IAPIResponse2[], name: string, price: number
@@ -75,24 +75,24 @@ const RoomPage = (props: {}) => {
             padding: '0px 0px 0px 10px', flexDirection: 'row', overflow: 'hidden'
           }}>
 
-            <Typography
+            <Typography color={'secondary'}
               sx={{
                 fontSize: '35px', margin: '0px 10px 0px 0px',
-                padding: '0px', fontWeight: 'bold', color: 'darkgray'
+                padding: '0px', fontWeight: 'bold', 
               }}>
 
               [{val.category}]
             </Typography>
 
-            <Typography
+            <Typography color = {'primary.dark'}
               sx={{
                 fontSize: '35px', margin: '0px', padding: '0px', fontWeight: 'bold'
               }}>
+              {val.name}
             </Typography>
-            {val.name}
-            <Typography className="page"
+            <Typography className="page" color={"secondary.dark"}
               sx={{
-                fontSize: '20px', color: 'dimgray',
+                fontSize: '20px', 
                 margin: '0px 50px 10px -10px', fontWeight: 'bold'
               }}>
               - 방 생성자 : {val.creator}
@@ -104,15 +104,15 @@ const RoomPage = (props: {}) => {
             <Box sx={{ display: 'flex' }}>
               <Typography
                 sx={{ fontWeight: 'bold', margin: '0px 5px 0px 0px', fontSize: '25px' }}
-                color='secondary.dark'>
+                color='primary.dark'>
                 ●
               </Typography>
               <Typography
-                color='secondary.dark'
+                color='primary.dark'
                 sx={{ fontWeight: 'bold', margin: '7px 0px 0px 0px' }}>
                 마감됨
               </Typography>
-              <Switch
+              <Switch color={"secondary"}
                 onChange={(e) => { }} disabled defaultChecked={val.isclosed}
                 sx={{ fontWeight: 'bold', margin: '0px 0px 0px 5px' }} />
             </Box>
@@ -123,15 +123,15 @@ const RoomPage = (props: {}) => {
             <Box sx={{ display: 'flex' }}>
               <Typography
                 sx={{ fontWeight: 'bold', margin: '0px 5px 0px 0px', fontSize: '25px' }}
-                color='secondary.dark'>
+                color='primary.dark'>
                 ●
               </Typography>
               <Typography
-                color='secondary.dark'
+                color='primary.dark'
                 sx={{ fontWeight: 'bold', margin: '7px 0px 0px 0px' }}>
                 구매함
               </Typography>
-              <Switch
+              <Switch color={"secondary"}
                 onChange={(e) => { }} disabled defaultChecked={val.ispurchased}
                 sx={{ fontWeight: 'bold', margin: '0px 0px 0px 5px' }} />
             </Box>
@@ -142,15 +142,15 @@ const RoomPage = (props: {}) => {
             <Box sx={{ display: 'flex' }}>
               <Typography
                 sx={{ fontWeight: 'bold', margin: '0px 5px 0px 0px', fontSize: '25px' }}
-                color='secondary.dark'>
+                color='primary.dark'>
                 ●
               </Typography>
               <Typography
-                color='secondary.dark'
+                color='primary.dark'
                 sx={{ fontWeight: 'bold', margin: '7px 0px 0px 0px' }}>
                 수령함
               </Typography>
-              <Switch
+              <Switch color={"secondary"}
                 onChange={(e) => { }} disabled defaultChecked={val.isrecieved}
                 sx={{ fontWeight: 'bold', margin: '0px 0px 0px 5px' }} />
             </Box>
@@ -160,15 +160,15 @@ const RoomPage = (props: {}) => {
             <Box sx={{ display: 'flex' }}>
               <Typography
                 sx={{ fontWeight: 'bold', margin: '0px 5px 0px 0px', fontSize: '25px' }}
-                color='secondary.dark'>
+                color='primary.dark'>
                 ●
               </Typography>
               <Typography
-                color='secondary.dark'
+                color='primary.dark'
                 sx={{ fontWeight: 'bold', margin: '7px 0px 0px 0px' }}>
                 정산함
               </Typography>
-              <Switch
+              <Switch 
                 onChange={(e) => { }} disabled defaultChecked={val.iscompleted}
                 sx={{ fontWeight: 'bold', margin: '0px 0px 0px 5px' }} />
             </Box>
@@ -189,7 +189,7 @@ const RoomPage = (props: {}) => {
               sx={{ margin: "3px 7px 0px 20px" }} />
 
             <Box>
-              <Typography
+              <Typography color={"primary"}
                 sx={{ fontWeight: 'bold', fontSize: '25px', margin: '0px 0px 0px 20px' }}>
                 설명 -
               </Typography>
@@ -206,17 +206,17 @@ const RoomPage = (props: {}) => {
               sx={{ margin: "3px 7px 0px 20px" }} />
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Typography
+                <Typography color={'primary.dark'}
                   sx={{
                     fontWeight: 'bold', fontSize: '25px', margin: '0px 10px 0px 20px',
                     justifySelf: 'center', alignSelf: 'center'
                   }}>
-                  멤버 - {val.members.length}명
+                  멤버수 - {val.members.length}명
                 </Typography>
 
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
 
-                  <Paper style={{ maxHeight: '20vh', width: '25vw', overflow: 'auto' }}>
+                  <Paper style={{ maxHeight: '20vh', width: '30vw', overflow: 'auto' }}>
                     {val.members.map((member, i) =>
                       <List>
                         <Box sx={{ display: 'flex' }}>
@@ -225,11 +225,7 @@ const RoomPage = (props: {}) => {
                             [{member.bank}:{member.account}]
                           </Typography>
 
-                          <Button sx={{ margin:'0px 0px 0px auto' }}>
-                          <Typography color='#ff0000'>
-                            X
-                          </Typography>
-                          </Button>
+
 
                         </Box>
 
@@ -240,8 +236,20 @@ const RoomPage = (props: {}) => {
 
                 </Box>
               </Box>
-
               <Box sx={{ display: 'flex', flexDirection: 'row', margin: '30px 0px 0px 0px' }}>
+                    <Typography color={'primary.dark'} sx={{
+                    fontWeight: 'bold', fontSize: '25px', margin: '0px 10px 0px 20px',
+                    justifySelf: 'flex-start'
+                  }}>
+                        가격 - {val.price}원
+                    </Typography>
+                    <Typography color={'primary'} sx={{
+                        fontWeight: 'bold', fontSize: '20px', alignSelf: 'flex-end', margin: '0px 0px 0px 0px'
+                    }}>
+                        / 1인당 {val.price / val.members.length}원
+                    </Typography>
+                </Box>
+              {/* <Box sx={{ display: 'flex', flexDirection: 'row', margin: '30px 0px 0px 0px' }}>
                 <Typography
                   sx={{
                     fontWeight: 'bold', fontSize: '25px', margin: '0px 10px 0px 20px',
@@ -250,7 +258,7 @@ const RoomPage = (props: {}) => {
                   가격 - {val.price}원
                 </Typography>
 
-              </Box>
+              </Box> */}
 
             </Box>
 

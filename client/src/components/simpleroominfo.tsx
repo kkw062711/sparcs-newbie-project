@@ -8,11 +8,21 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "./reducer";
 
+interface IAPIResponseUser { name: string }
+
+
 const SimpleRoomInfo = (props: {
     text, mcount, category, createdat, creator, id, image, name, isclosed,
     ispurchased, iscompleted, isrecieved, username, key
 }) => {
-
+    useEffect(() => {
+        const getUsernName = async () => {
+            const { data } = await axios.post<IAPIResponseUser[]>(SAPIBase + '/user/getUser', { id: props.creator });
+            setLAPIResponseUser(data);
+        };
+        getUsernName().catch((e) => window.alert(`Error while running API Call: ${e}`));
+        return () => { }
+    }, []);
 
     const navigate = useNavigate();
     const userId = useSelector((state: RootState) => state.auth)
@@ -20,7 +30,9 @@ const SimpleRoomInfo = (props: {
     const [isclosed, setIsclosed] = useState(props.isclosed)
     const [iscompleted, setIscompleted] = useState(props.iscompleted)
     const [isrecieved, setIsrecieved] = useState(props.isrecieved)
-    const [is, setIs] = useState([props.isclosed, props.ispurchased, props.isrecieved,props.iscompleted])
+    const [is, setIs] = useState([props.isclosed, props.ispurchased, props.isrecieved, props.iscompleted])
+    const [LAPIResponseuser, setLAPIResponseUser] = useState<IAPIResponseUser[]>([]);
+    
     const changeis = (n) => {
         console.log(n)
         is[n] = !is[n]
@@ -63,8 +75,8 @@ const SimpleRoomInfo = (props: {
         console.log(isclosed)
         const asyncFun = async () => {
             const updateRoom = await axios.post(SAPIBase + '/room/updateRoomState', {
-                id: props.id, isclosed: is[0], 
-                ispurchased: is[1],iscompleted: is[3],
+                id: props.id, isclosed: is[0],
+                ispurchased: is[1], iscompleted: is[3],
                 isrecieved: is[2]
             });
         }
@@ -101,7 +113,7 @@ const SimpleRoomInfo = (props: {
                     <Typography color={'secondary.dark'} sx={{
                         margin: '0px 0px 0px 0.5vw', fontWeight: 'bold', fontSize: '20px', alignSelf: 'flex-end'
                     }}>
-                        - by. {props.username.name}
+                        - by. {LAPIResponseuser.name}
                     </Typography>
 
                     <Typography color={'secondary'} sx={{
@@ -127,7 +139,7 @@ const SimpleRoomInfo = (props: {
                         </Box>
 
                         <Switch checked={is[0]}
-                        sx={{fontWeight:'bold'}} color='secondary' onClick={(e) => { changeis(0)}} />
+                            sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(0) }} />
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column', margin: '0px 5px 0px 5px' }}>
@@ -138,7 +150,7 @@ const SimpleRoomInfo = (props: {
                                 구매함
                             </Typography>
                         </Box>
-                        <Switch checked={is[1]} sx={{fontWeight:'bold'}} color='secondary' onClick={(e) => { changeis(1)}} />
+                        <Switch checked={is[1]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(1) }} />
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column', margin: '0px 5px 0px 5px' }}>
@@ -149,7 +161,7 @@ const SimpleRoomInfo = (props: {
                                 배송됨
                             </Typography>
                         </Box>
-                        <Switch checked={is[2]} sx={{fontWeight:'bold'}} color='secondary' onClick={(e) => { changeis(2)}} />
+                        <Switch checked={is[2]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(2) }} />
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column', margin: '0px 5px 0px 5px' }}>
@@ -160,8 +172,8 @@ const SimpleRoomInfo = (props: {
                                 정산함
                             </Typography>
                         </Box>
-                        <Switch checked={is[3]} sx={{fontWeight:'bold'}} color='secondary' onClick={(e) => { changeis(3)}} />
-                          
+                        <Switch checked={is[3]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(3) }} />
+
                     </Box>
 
                     <Box sx={{
