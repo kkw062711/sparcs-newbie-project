@@ -95,8 +95,10 @@ const ProfilePage = (props: {}) => {
         const deleteUser = await axios.post(SAPIBase + '/user/deleteUser', { id: userId });
         console.log(deleteUser)
       }
-      asyncFun().catch(e => { window.alert(`Update Error! ${e}`) });
+      asyncFun().catch(e => { window.alert(`Delete Error! ${e}`) });
+      store.dispatch({ type: 'changeauth', auth:'0' })
       navigate('/')
+      location.reload()
     } else {
       return
     }

@@ -63,6 +63,9 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+if (localStorage.getItem('auth') == undefined || localStorage.getItem('auth')=='undefined'){
+  localStorage.setItem('auth','0')
+}
 
 root.render(
   <React.StrictMode>

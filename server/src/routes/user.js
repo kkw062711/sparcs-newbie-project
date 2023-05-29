@@ -1,14 +1,14 @@
 const { PrismaClient } = require("@prisma/client")
 
 const express = require('express');
-const client = new PrismaClient().user;
+const client = new PrismaClient();
 const router = express.Router();
 const nodemailer = require('nodemailer')
 
 router.post('/getUser', async (req, res) => {
     try {
         const { id } = req.body;
-        const getUser = await client.findUnique({
+        const getUser = await client.user.findUnique({
             where: { id: parseInt(id) }
         })
         if (!getUser) return res.status(200).json(getUser)
@@ -21,7 +21,7 @@ router.post('/getUser', async (req, res) => {
 router.post('/addUser', async (req, res) => {
     try {
         const { email, password, name, phone, bank, account } = req.body;
-        const addUser = await client.create({
+        const addUser = await client.user.create({
             data: {
                 email: email,
                 password: password,
@@ -32,7 +32,7 @@ router.post('/addUser', async (req, res) => {
             }
         })
         if (!addUser) return res.status(500).json({ error: addUser })
-        else { return res.status(200).json({ isOK: true, added : addUser }); }
+        else { return res.status(200).json({ isOK: true, added: addUser }); }
     } catch (e) {
         return res.status(500).json({ error: e });
     }
@@ -42,7 +42,7 @@ router.post('/Login', async (req, res) => {
     try {
         const { email, password } = req.body;
         var Loginsuccess = false;
-        const Login = await client.findUnique({
+        const Login = await client.user.findUnique({
             where: {
                 email: email
             }
@@ -64,11 +64,49 @@ router.post('/Login', async (req, res) => {
 router.post('/deleteUser', async (req, res) => {
     try {
         const { id } = req.body;
-        const deleteUser = await client.delete({
+
+        const rooms = await client.user.findUnique({
             where: {
                 id: parseInt(id),
             }
         })
+
+        const createdroom = await client.room.findMany({
+            where: {
+                creator: id
+            }
+        })
+
+        createdroom.forEach(async (room) => {
+            const deleteRoom = await client.room.delete({
+                where: {
+                    id: room.id
+                }
+            })
+        })
+
+        rooms.roomjoined.forEach(async (room) => {
+            const joinedroom = await client.room.findUnique({
+                where: { id: parseInt(room) },
+                select: { members: true }
+            })
+            console.log([...joinedroom.members.filter((i) => i !== parseInt(id))])
+            const updateRoomUser = await client.room.update({
+                where: { id: parseInt(room) },
+                data: {
+                    members: [...joinedroom.members.filter((i) => i !== parseInt(id))]
+                }
+            })
+        })
+
+
+
+        const deleteUser = await client.user.delete({
+            where: {
+                id: parseInt(id),
+            }
+        })
+        deleteUser = true
         console.log(deleteUser)
         if (!deleteUser) return res.status(500).json({ error: "Can't Delete User" })
         else return res.status(200).json({ isOK: true });
@@ -80,7 +118,7 @@ router.post('/deleteUser', async (req, res) => {
 router.post('/updateUserInfo', async (req, res) => {
     try {
         const { id, password, name, phone, bank, account } = req.body;
-        const updateUserInfo = await client.update({
+        const updateUserInfo = await client.user.update({
             where: {
                 id: parseInt(id)
             },
@@ -101,13 +139,13 @@ router.post('/updateUserInfo', async (req, res) => {
 router.post('/updateUserRoom', async (req, res) => {
     try {
         const { id, roomjoined, ifadd } = req.body;
-        const userroom = await client.findUnique({
+        const userroom = await client.user.findUnique({
             where: { id: parseInt(id) },
             select: { roomjoined: true }
         })
         const updateUserRoom = null
         if (ifadd) {
-            updateUserRoom = await client.update({
+            updateUserRoom = await client.user.update({
                 where: { id: id },
                 data: {
                     roomjoined: {
@@ -117,7 +155,7 @@ router.post('/updateUserRoom', async (req, res) => {
             })
         }
         else {
-            updateUserRoom = await client.update({
+            updateUserRoom = await client.user.update({
                 where: { id: parseInt(id) },
                 data: {
                     roomjoined: {
