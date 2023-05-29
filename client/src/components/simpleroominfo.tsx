@@ -32,7 +32,8 @@ const SimpleRoomInfo = (props: {
     const [isrecieved, setIsrecieved] = useState(props.isrecieved)
     const [is, setIs] = useState([props.isclosed, props.ispurchased, props.isrecieved, props.iscompleted])
     const [LAPIResponseuser, setLAPIResponseUser] = useState<IAPIResponseUser[]>([]);
-    
+    const iscreator = props.text=='방 삭제' ? false : true
+
     const changeis = (n) => {
         console.log(n)
         is[n] = !is[n]
@@ -138,7 +139,7 @@ const SimpleRoomInfo = (props: {
                             </Typography>
                         </Box>
 
-                        <Switch checked={is[0]}
+                        <Switch checked={is[0]} disabled={iscreator}
                             sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(0) }} />
                     </Box>
 
@@ -150,7 +151,7 @@ const SimpleRoomInfo = (props: {
                                 구매함
                             </Typography>
                         </Box>
-                        <Switch checked={is[1]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(1) }} />
+                        <Switch disabled={iscreator} checked={is[1]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(1) }} />
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column', margin: '0px 5px 0px 5px' }}>
@@ -161,7 +162,7 @@ const SimpleRoomInfo = (props: {
                                 배송됨
                             </Typography>
                         </Box>
-                        <Switch checked={is[2]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(2) }} />
+                        <Switch disabled={iscreator} checked={is[2]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(2) }} />
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column', margin: '0px 5px 0px 5px' }}>
@@ -172,7 +173,7 @@ const SimpleRoomInfo = (props: {
                                 정산함
                             </Typography>
                         </Box>
-                        <Switch checked={is[3]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(3) }} />
+                        <Switch disabled={iscreator} checked={is[3]} sx={{ fontWeight: 'bold' }} color='secondary' onClick={(e) => { changeis(3) }} />
 
                     </Box>
 
